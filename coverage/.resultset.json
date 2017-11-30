@@ -1,0 +1,62 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/home/vincent/workspace/suite/sessions/decorators/account.rb": [
+        1,
+        1,
+        1,
+        1,
+        null,
+        1,
+        4,
+        null,
+        null,
+        null
+      ],
+      "/home/vincent/workspace/suite/sessions/controllers/sessions_controller.rb": [
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        1,
+        22,
+        null,
+        22,
+        10,
+        10,
+        null,
+        12,
+        12,
+        12,
+        12,
+        null,
+        12,
+        2,
+        2,
+        null,
+        2,
+        2,
+        null,
+        2,
+        2,
+        null,
+        2,
+        2,
+        null,
+        2,
+        2,
+        null,
+        2,
+        2,
+        2,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1512083533
+  }
+}

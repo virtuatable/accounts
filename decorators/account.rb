@@ -3,8 +3,8 @@ module Decorators
     delegate_all
     decorates_finders
 
-    def authenticate(password)
-
+    def match_password(password)
+      return BCrypt::Password.new(password_digest) == password
     end
   end
 end
