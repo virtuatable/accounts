@@ -5,7 +5,8 @@ Mongoid.load!(File.join(File.dirname(__FILE__), 'config', 'mongoid.yml'))
 
 require './decorators/account.rb'
 require './controllers/sessions_controller.rb'
+require './utils/seeder.rb'
 
-service = Arkaan::Monitoring::Service.where(key: 'accounts').first
+service = Utils::Seeder.instance.create_service('sessions')
 
-map(service ? service.path : '/sessions') { run SessionsController.new }
+map(service.path) { run SessionsController.new }

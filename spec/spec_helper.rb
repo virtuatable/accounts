@@ -7,6 +7,7 @@ end
 
 require File.join(File.dirname(__FILE__), '..', 'decorators', 'account.rb')
 require File.join(File.dirname(__FILE__), '..', 'controllers', 'sessions_controller.rb')
+require File.join(File.dirname(__FILE__), '..', 'utils', 'seeder.rb')
 
 Dir[File.join(File.dirname(__FILE__), 'support', '**', '*.rb')].each do |filename|
   require filename
