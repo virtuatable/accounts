@@ -10,11 +10,11 @@ module Utils
       service = Arkaan::Monitoring::Service.where(key: key).first
 
       if service.nil?
-        service = Arkaan::Monitoring::Service.create!(key: key, path: "/#{key}", premium: true)
+        service = Arkaan::Monitoring::Service.create!(key: key, path: "/#{key}", premium: true, active: true)
       end
 
       if service.instances.where(url: ENV['SERVICE_URL']).first.nil?
-        Arkaan::Monitoring::Instance.create!(url: ENV['SERVICE_URL'], running: true, service: service)
+        Arkaan::Monitoring::Instance.create!(url: ENV['SERVICE_URL'], running: true, service: service, active: true)
       end
 
       return service
