@@ -26,6 +26,18 @@ RSpec.describe SessionsController do
         session = Arkaan::Authentication::Session.first
         expect(JSON.parse(last_response.body)).to eq({'token' => session.token, 'expiration' => session.expiration})
       end
+      it 'inserts the session with the right duration if the duration is given' do
+        session = Arkaan::Authentication::Session.first
+        expect(JSON.parse(last_response.body)).to eq({'token' => session.token, 'expiration' => session.expiration})
+      end
+    end
+    describe 'Nominal case with a given expiration' do
+      before do
+        post '/', {token: 'test_token', username: 'Babausse', password: 'password', app_key: 'test_key', expiration: 1000}.to_json
+      end
+      it 'inserts the session with the right duration if the duration is given' do
+        expect(JSON.parse(last_response.body)).to eq({'token' => Arkaan::Authentication::Session.first.token, 'expiration' => 1000})
+      end
     end
     describe 'bad request errors' do
       describe 'empty body error' do

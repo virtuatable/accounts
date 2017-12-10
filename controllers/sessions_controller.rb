@@ -26,7 +26,8 @@ class SessionsController < Sinatra::Base
       elsif BCrypt::Password.new(account.password_digest) != password
         halt 403, {message: 'wrong_password'}.to_json
       else
-        session = account.sessions.create(token: SecureRandom.hex)
+        expiration = @parameters['expiration'] || 3600
+        session = account.sessions.create(token: SecureRandom.hex, expiration: expiration)
         halt 201, {token: session.token, expiration: session.expiration}.to_json
       end
     end
