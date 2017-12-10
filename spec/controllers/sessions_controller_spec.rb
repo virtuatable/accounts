@@ -182,8 +182,8 @@ RSpec.describe SessionsController do
         it 'returns the right creation date for the session' do
           expect(body['created_at']).to eq session.created_at.to_s
         end
-        it 'returns the right user identifier for the session' do
-          expect(body['account_id']).to eq account.id.to_s
+        it 'returns the right username for the session' do
+          expect(body['username']).to eq account.username
         end
       end
     end

@@ -11,7 +11,7 @@ module Decorators
         token: token,
         expiration: expiration,
         created_at: created_at.to_s,
-        account_id: account.id.to_s
+        username: account.username
       }
     end
 
