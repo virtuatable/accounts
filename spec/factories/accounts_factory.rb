@@ -1,10 +1,10 @@
 FactoryGirl.define do
   factory :empty_account, class: Arkaan::Account do
     factory :account do
-      username 'Babausse'
+      username 'Autre compte'
       password 'password'
       password_confirmation 'password'
-      email 'test@test.com'
+      email 'machin@test.com'
       lastname 'Courtois'
       firstname 'Vincent'
     end
