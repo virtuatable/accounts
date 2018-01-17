@@ -4,7 +4,7 @@
 # @author Vincent Courtois <courtois.vincent@outlook.com>
 class AccountsController < Arkaan::Utils::Controller
 
-  declare_route('post', '/') do
+  declare_premium_route('post', '/') do
     check_presence('username', 'password', 'password_confirmation', 'email')
     account = Arkaan::Account.new(account_parameters)
     if account.save
