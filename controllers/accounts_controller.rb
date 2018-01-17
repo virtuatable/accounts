@@ -3,7 +3,8 @@
 # Main controller of the application, creating and destroying sessions.
 # @author Vincent Courtois <courtois.vincent@outlook.com>
 class AccountsController < Arkaan::Utils::Controller
-  post '/' do
+
+  declare_route('post', '/') do
     check_presence('username', 'password', 'password_confirmation', 'email')
     account = Arkaan::Account.new(account_parameters)
     if account.save
