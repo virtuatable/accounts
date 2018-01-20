@@ -36,9 +36,6 @@ RSpec.describe AccountsController do
         it 'creates an account with the correct username' do
           expect(attributes['username']).to eq('Babausse')
         end
-        it 'creates an account with the correct password hash' do
-          expect(BCrypt::Password.new(attributes['password_digest'])).to eq('password')
-        end
         it 'creates an account with the correct email address' do
           expect(attributes['email']).to eq('test@test.com')
         end
@@ -225,6 +222,95 @@ RSpec.describe AccountsController do
         end
         it 'returns a correct body when the password confirmation does not match the password' do
           expect(JSON.parse(last_response.body)['errors']).to eq(['account.password.confirmation'])
+        end
+      end
+    end
+  end
+
+  describe 'get /accounts/:id' do
+    describe 'Nominal case' do
+      before do
+        get "/#{account.id.to_s}?token=test_token&app_key=test_key"
+      end
+      it 'Returns an OK (200) response when the account exists' do
+        expect(last_response.status).to be 200
+      end
+      describe 'Account attributes' do
+        let!(:parsed_account) { JSON.parse(last_response.body)['account'] }
+
+        it 'Returns an account with the correct username' do
+          expect(parsed_account['username']).to eq(account.username)
+        end
+        it 'Returns an account with the correct email' do
+          expect(parsed_account['email']).to eq(account.email)
+        end
+        it 'Returns an account with the correct first name' do
+          expect(parsed_account['firstname']).to eq(account.firstname)
+        end
+        it 'Returns an account with the correct last name' do
+          expect(parsed_account['lastname']).to eq(account.lastname)
+        end
+        it 'Returns an account with the correct birthdate' do
+          expect(DateTime.parse(parsed_account['birthdate'])).to eq(account.birthdate)
+        end
+      end
+    end
+    describe 'bad request errors' do
+      describe 'no token error' do
+        before do
+          get "#{account.id.to_s}?app_key=test_key"
+        end
+        it 'Raises a Bad Request (400) error when the gateway token is not given' do
+          expect(last_response.status).to be 400
+        end
+        it 'returns a correct body when the gateway token is not given' do
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+        end
+      end
+      describe 'no app key error' do
+        before do
+          get "#{account.id.to_s}?token=test_token"
+        end
+        it 'Raises a Bad Request (400) error when the application key is not given' do
+          expect(last_response.status).to be 400
+        end
+        it 'returns a correct body when the application key is not given' do
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+        end
+      end
+    end
+    describe 'not found errors' do
+      describe 'application not found' do
+        before do
+          get "#{account.id.to_s}?token=test_token&app_key=fake_key"
+        end
+        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
+          expect(last_response.status).to be 404
+        end
+        it 'returns the correct body when the gateway doesn\'t exist' do
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'application_not_found'})
+        end
+      end
+      describe 'gateway not found' do
+        before do
+          get "#{account.id.to_s}?token=fake_token&app_key=test_key"
+        end
+        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
+          expect(last_response.status).to be 404
+        end
+        it 'returns the correct body when the gateway doesn\'t exist' do
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'gateway_not_found'})
+        end
+      end
+      describe 'account not found' do
+        before do
+          get "unexisting_id?token=test_token&app_key=test_key"
+        end
+        it 'Returns a Not Found (404) error when the account does not exist' do
+          expect(last_response.status).to be 404
+        end
+        it 'Returns the correct message when an account does not exist' do
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'account_not_found'})
         end
       end
     end

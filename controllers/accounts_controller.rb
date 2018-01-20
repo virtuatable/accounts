@@ -14,6 +14,15 @@ class AccountsController < Arkaan::Utils::Controller
     end
   end
 
+  declare_route('get', '/:id') do
+    account = Arkaan::Account.where(id: params[:id]).first
+    if account.nil?
+      halt 404, {message: 'account_not_found'}.to_json
+    else
+      halt 200,  {account: Decorators::Account.new(account).to_h}.to_json
+    end
+  end
+
   # Selects the parameters suited to create an account.
   # @return [Hash<String, Object>] the hash composed of the selected keys.
   def account_parameters

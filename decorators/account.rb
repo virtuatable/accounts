@@ -9,7 +9,6 @@ module Decorators
     def to_h
       return {
         username: username,
-        password_digest: password_digest,
         lastname: lastname,
         firstname: firstname,
         email: email,
