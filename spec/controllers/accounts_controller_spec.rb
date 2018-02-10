@@ -228,6 +228,14 @@ RSpec.describe AccountsController do
   end
 
   describe 'get /accounts/:id' do
+    let!(:category) { create(:category) }
+    let!(:right) { create(:right, category: category) }
+    let!(:group) {
+      tmp_group = create(:group, rights: [right], accounts: [account])
+      account.groups << tmp_group
+      account.save!
+      tmp_group
+    }
     describe 'Nominal case' do
       before do
         get "/#{account.id.to_s}?token=test_token&app_key=test_key"
@@ -252,6 +260,9 @@ RSpec.describe AccountsController do
         end
         it 'Returns an account with the correct birthdate' do
           expect(DateTime.parse(parsed_account['birthdate'])).to eq(account.birthdate)
+        end
+        it 'Returns an account with the correct rights' do
+          expect(parsed_account['rights']).to eq([{'id' => right.id.to_s, 'slug' => 'test_category.test_right'}])
         end
       end
     end

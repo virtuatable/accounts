@@ -12,8 +12,19 @@ module Decorators
         lastname: lastname,
         firstname: firstname,
         email: email,
-        birthdate: birthdate
+        birthdate: birthdate,
+        rights: get_rights
       }
+    end
+
+    def get_rights
+      return get_raw_rights.flatten
+    end
+
+    def get_raw_rights
+      object.groups.map do |group|
+        Decorators::Right.decorate_collection(group.rights).map(&:to_h)
+      end
     end
 
   end
