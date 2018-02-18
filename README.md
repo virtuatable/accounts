@@ -7,13 +7,13 @@
 #### MongoDB URL
 
 __Name :__ `MONGODB_URL`  
-__Type :__ String
+__Type :__ String  
 __Meaning :__ The URL of the MongoDB database linked to this instance of the service.
 
 #### Service URL
 
-__Name :__ `SERVICE_URL`
-__Type :__ String
+__Name :__ `SERVICE_URL`  
+__Type :__ String  
 __Meaning :__ The URL to reach the current service, MUST end with a final slash (/) character.
 
 ### Install gems
