@@ -51,17 +51,6 @@ RSpec.describe AccountsController do
       end
     end
     describe 'bad request errors' do
-      describe 'empty body error' do
-        before do
-          post '/'
-        end
-        it 'Raises a Bad Request (400) error when the body is empty' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns a correct body when the body of the request was empty' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
-        end
-      end
       describe 'no token error' do
         before do
           post '/', {app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
@@ -70,7 +59,7 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'returns a correct body when the gateway token is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.token'})
         end
       end
       describe 'no app key error' do
@@ -81,7 +70,7 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'returns a correct body when the application key is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.app_key'})
         end
       end
       describe 'no username error' do
@@ -92,7 +81,7 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'returns a correct body when the username is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.username'})
         end
       end
       describe 'no password error' do
@@ -103,7 +92,7 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'returns a correct body when the password is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.password'})
         end
       end
       describe 'no password confirmation error' do
@@ -114,7 +103,7 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'returns a correct body when the password confirmation is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.password_confirmation'})
         end
       end
       describe 'no email error' do
@@ -125,7 +114,7 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'returns a correct body when the email is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.email'})
         end
       end
     end
@@ -275,7 +264,7 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'returns a correct body when the gateway token is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.token'})
         end
       end
       describe 'no app key error' do
@@ -286,7 +275,7 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'returns a correct body when the application key is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'bad_request'})
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.app_key'})
         end
       end
     end

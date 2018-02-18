@@ -34,6 +34,11 @@ To run the development server, use the command : `rackup`
 
 To run the test suite, use the command : `rspec`
 
+### Number of existing tests
+
+__Date :__ 18/02/2018 17:21
+__Count :__ 52 tests
+
 ## How to use
 
 For details about the usage of the service, see the [associated wiki](https://github.com/jdr-tools/accounts/wiki)
