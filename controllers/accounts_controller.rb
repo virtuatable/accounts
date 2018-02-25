@@ -4,6 +4,7 @@
 # @author Vincent Courtois <courtois.vincent@outlook.com>
 class AccountsController < Arkaan::Utils::Controller
 
+  # @see https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account
   declare_premium_route('post', '/') do
     check_presence('username', 'password', 'password_confirmation', 'email')
     account = Arkaan::Account.new(account_parameters)
@@ -14,6 +15,7 @@ class AccountsController < Arkaan::Utils::Controller
     end
   end
 
+  # @see https://github.com/jdr-tools/accounts/wiki/Obtaining-account-informations
   declare_route('get', '/:id') do
     account = Arkaan::Account.where(id: params[:id]).first
     if account.nil?
