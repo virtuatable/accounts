@@ -50,29 +50,10 @@ RSpec.describe AccountsController do
         end
       end
     end
+
+    it_should_behave_like 'a route', 'post', '/'
+
     describe 'bad request errors' do
-      describe 'no token error' do
-        before do
-          post '/', {app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
-        end
-        it 'Raises a Bad Request (400) error when the gateway token is not given' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns a correct body when the gateway token is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.token'})
-        end
-      end
-      describe 'no app key error' do
-        before do
-          post '/', {token: 'test_token', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
-        end
-        it 'Raises a Bad Request (400) error when the application key is not given' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns a correct body when the application key is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.app_key'})
-        end
-      end
       describe 'no username error' do
         before do
           post '/', {token: 'test_token', app_key: 'test_key', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
@@ -131,34 +112,10 @@ RSpec.describe AccountsController do
         end
       end
     end
-    describe 'not found errors' do
-      describe 'application not found' do
-        before do
-          post '/', {token: 'test_token', app_key: 'fake_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
-        end
-        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'application_not_found'})
-        end
-      end
-      describe 'gateway not found' do
-        before do
-          post '/', {token: 'fake_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
-        end
-        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'gateway_not_found'})
-        end
-      end
-    end
     describe 'unprocessable entity errors' do
       describe 'already taken username error' do
         before do
-          create(:account, username: 'Babausse', email: 'another@test.com')
+          create(:other_account, username: 'Babausse', email: 'another@test.com')
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
         end
         it 'Raises an Unprocessable Entity (422) error when the username is already taken' do
@@ -181,7 +138,7 @@ RSpec.describe AccountsController do
       end
       describe 'already taken email error' do
         before do
-          create(:account, username: 'Another random username', email: 'test@test.com')
+          create(:other_account, username: 'Another random username', email: 'test@test.com')
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
         end
         it 'Raises an Unprocessable Entity (422) error when the email is already taken' do
@@ -255,53 +212,10 @@ RSpec.describe AccountsController do
         end
       end
     end
-    describe 'bad request errors' do
-      describe 'no token error' do
-        before do
-          get "#{account.id.to_s}?app_key=test_key"
-        end
-        it 'Raises a Bad Request (400) error when the gateway token is not given' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns a correct body when the gateway token is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.token'})
-        end
-      end
-      describe 'no app key error' do
-        before do
-          get "#{account.id.to_s}?token=test_token"
-        end
-        it 'Raises a Bad Request (400) error when the application key is not given' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns a correct body when the application key is not given' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.app_key'})
-        end
-      end
-    end
+
+    it_should_behave_like 'a route', 'get', '/accounts/account_id'
+
     describe 'not found errors' do
-      describe 'application not found' do
-        before do
-          get "#{account.id.to_s}?token=test_token&app_key=fake_key"
-        end
-        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'application_not_found'})
-        end
-      end
-      describe 'gateway not found' do
-        before do
-          get "#{account.id.to_s}?token=fake_token&app_key=test_key"
-        end
-        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'gateway_not_found'})
-        end
-      end
       describe 'account not found' do
         before do
           get "unexisting_id?token=test_token&app_key=test_key"
