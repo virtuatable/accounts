@@ -8,6 +8,7 @@ module Decorators
 
     def to_h
       return {
+        id: _id.to_s,
         username: username,
         lastname: lastname,
         firstname: firstname,

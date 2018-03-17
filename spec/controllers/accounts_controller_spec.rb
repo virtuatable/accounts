@@ -192,6 +192,9 @@ RSpec.describe AccountsController do
       describe 'Account attributes' do
         let!(:parsed_account) { JSON.parse(last_response.body)['account'] }
 
+        it 'returns an account with the correct id' do
+          expect(parsed_account['id']).to eq account.id.to_s
+        end
         it 'Returns an account with the correct username' do
           expect(parsed_account['username']).to eq(account.username)
         end
