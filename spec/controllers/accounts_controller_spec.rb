@@ -33,20 +33,42 @@ RSpec.describe AccountsController do
       describe 'Accounts attributes' do
         let!(:attributes) { JSON.parse(last_response.body)['account'] }
 
-        it 'creates an account with the correct username' do
+        it 'Returns an account with the correct username' do
           expect(attributes['username']).to eq('Babausse')
         end
-        it 'creates an account with the correct email address' do
+        it 'Returns an account with the correct email address' do
           expect(attributes['email']).to eq('test@test.com')
         end
-        it 'creates an account with the correct last name' do
+        it 'Returns an account with the correct last name' do
           expect(attributes['lastname']).to eq('Courtois')
         end
-        it 'creates an account with the correct first name' do
+        it 'Returns an account with the correct first name' do
           expect(attributes['firstname']).to eq('Vincent')
         end
-        it 'creates an account with the correct birth date' do
+        it 'Returns an account with the correct birth date' do
           expect(DateTime.parse(attributes['birthdate'])).to eq(DateTime.new(1989, 8, 29, 21, 50))
+        end
+      end
+      describe 'created account' do
+        let(:created_account) { Arkaan::Account.where(username: 'Babausse').first }
+
+        it 'has created an account with the correct username' do
+          expect(created_account.username).to eq 'Babausse'
+        end
+        it 'has created an account with the correct password' do
+          expect(created_account.authenticate('password')).to be_truthy
+        end
+        it 'has created an account with the correct email' do
+          expect(created_account.email).to eq 'test@test.com'
+        end
+        it 'has created an account with the correct first name' do
+          expect(created_account.firstname).to eq 'Vincent'
+        end
+        it 'has created an account with the correct last name' do
+          expect(created_account.lastname).to eq 'Courtois'
+        end
+        it 'has created an account with the correct birth date' do
+          expect(created_account.birthdate).to eq DateTime.new(1989, 8, 29, 21, 50)
         end
       end
     end
@@ -254,7 +276,7 @@ RSpec.describe AccountsController do
           expect(created_account.username).to eq 'Autre compte'
         end
         it 'has not modified the password of the user' do
-          expect(BCrypt::Password.new(created_account.password_digest)).to eq 'long_password'
+          expect(created_account.authenticate('long_password')).to be_truthy
         end
         it 'has not modified the email address of the user' do
           expect(created_account.email).to eq 'machin@test.com'
@@ -282,6 +304,26 @@ RSpec.describe AccountsController do
       end
       it 'Correctly updated the username on the user' do
         expect(Arkaan::Account.first.username).to eq 'Compte de test'
+      end
+    end
+    describe 'password being updated' do
+      before do
+        put '/own', {
+          session_id: session.token,
+          token: 'test_token',
+          app_key: 'test_key',
+          password: 'new_password',
+          password_confirmation: 'new_password'
+        }
+      end
+      it 'Returns a OK (200) response code when the password is correctly updated' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body when the password is updated' do
+        expect(JSON.parse(last_response.body)).to eq({'message' => 'updated'})
+      end
+      it 'Correctly updates the password on the account' do
+        expect(Arkaan::Account.first.authenticate('new_password')).to be_truthy
       end
     end
     describe 'email being updated' do
@@ -355,6 +397,17 @@ RSpec.describe AccountsController do
           expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.session_id'})
         end
       end
+      describe 'password confirmation not given error' do
+        before do
+          put '/own', {token: 'test_token', app_key: 'test_key', session_id: session.token, password: 'new_password'}
+        end
+        it 'Returns a Bad Request (400) error when the password confirmation is not given with the password' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body if the password confirmation is not given with the password' do
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.password_confirmation'})
+        end
+      end
     end
 
     describe 'Unprocessable Entity errors' do
@@ -379,6 +432,23 @@ RSpec.describe AccountsController do
         end
         it 'Returns the correct body if the username is already taken' do
           expect(JSON.parse(last_response.body)).to eq({'errors' => ['account.username.uniq']})
+        end
+      end
+      describe 'password and confirmation not matching error' do
+        before do
+          put '/own', {
+            session_id: session.token,
+            token: 'test_token',
+            app_key: 'test_key',
+            password: 'new_password',
+            password_confirmation: 'another_new_password'
+          }
+        end
+        it 'Returns an Unprocessable entity (422) response status if the confirmation does not match the password' do
+          expect(last_response.status).to be 422
+        end
+        it 'Returns the correct body if the confirmation does not match the password' do
+          expect(JSON.parse(last_response.body)).to eq({'errors' => ['account.password.confirmation']})
         end
       end
       describe 'email already used when given error' do

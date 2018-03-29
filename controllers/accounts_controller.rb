@@ -27,6 +27,7 @@ class AccountsController < Arkaan::Utils::Controller
 
   declare_route('put', '/own') do
     check_presence('session_id')
+    check_presence('password_confirmation') if params.has_key?('password')
     session = Arkaan::Authentication::Session.where(token: params['session_id']).first
     if session.nil?
       halt 404, {message: 'session_not_found'}.to_json
