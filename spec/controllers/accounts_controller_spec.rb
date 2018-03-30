@@ -232,4 +232,167 @@ RSpec.describe AccountsController do
       end
     end
   end
+
+  describe 'put /accounts/own' do
+
+    let!(:session) { create(:session, account: account) }
+
+    describe 'Nothing being updated' do
+      before do
+        put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key'}
+      end
+      it 'Returns a OK (200) response code when the account is updated with nothing' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body when the account is updated with nothing' do
+        expect(JSON.parse(last_response.body)).to eq({'message' => 'updated'})
+      end
+      describe 'campaign parameters' do
+        let!(:created_account) { Arkaan::Account.all.first }
+
+        it 'has not modified the username of the user' do
+          expect(created_account.username).to eq 'Autre compte'
+        end
+        it 'has not modified the password of the user' do
+          expect(BCrypt::Password.new(created_account.password_digest)).to eq 'long_password'
+        end
+        it 'has not modified the email address of the user' do
+          expect(created_account.email).to eq 'machin@test.com'
+        end
+        it 'has not modifier the first name of the user' do
+          expect(created_account.firstname).to eq 'Vincent'
+        end
+        it 'has not modified the last name of the user' do
+          expect(created_account.lastname).to eq 'Courtois'
+        end
+        it 'has not modified the birth date of the user' do
+          expect(created_account.birthdate).to eq DateTime.new(1989, 8, 29, 21, 50)
+        end
+      end
+    end
+    describe 'username being updated' do
+      before do
+        put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', username: 'Compte de test'}
+      end
+      it 'Returns a OK (200) response code when the username is correctly updated' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body when the username is updated' do
+        expect(JSON.parse(last_response.body)).to eq({'message' => 'updated'})
+      end
+      it 'Correctly updated the username on the user' do
+        expect(Arkaan::Account.first.username).to eq 'Compte de test'
+      end
+    end
+    describe 'email being updated' do
+      before do
+        put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', email: 'test@mail.com'}
+      end
+      it 'Returns a OK (200) response code when the email is correctly updated' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body when the email is updated' do
+        expect(JSON.parse(last_response.body)).to eq({'message' => 'updated'})
+      end
+      it 'Correctly updated the email on the user' do
+        expect(Arkaan::Account.first.email).to eq 'test@mail.com'
+      end
+    end
+    describe 'first name being updated' do
+      before do
+        put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', firstname: 'Babausse'}
+      end
+      it 'Returns a OK (200) response code when the first name is correctly updated' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body when the first name is updated' do
+        expect(JSON.parse(last_response.body)).to eq({'message' => 'updated'})
+      end
+      it 'Correctly updated the first name on the user' do
+        expect(Arkaan::Account.first.firstname).to eq 'Babausse'
+      end
+    end
+    describe 'last name being updated' do
+      before do
+        put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', lastname: 'Babausse'}
+      end
+      it 'Returns a OK (200) response code when the last name is correctly updated' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body when the last name is updated' do
+        expect(JSON.parse(last_response.body)).to eq({'message' => 'updated'})
+      end
+      it 'Correctly updated the last name on the user' do
+        expect(Arkaan::Account.first.lastname).to eq 'Babausse'
+      end
+    end
+    describe 'birth date being updated' do
+      before do
+        put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', birthdate: DateTime.new(2000, 6, 12, 23, 51)}
+      end
+      it 'Returns a OK (200) response code when the birth date is correctly updated' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body when the birth date is updated' do
+        expect(JSON.parse(last_response.body)).to eq({'message' => 'updated'})
+      end
+      it 'Correctly updated the birth date on the user' do
+        expect(Arkaan::Account.first.birthdate).to eq DateTime.new(2000, 6, 12, 23, 51)
+      end
+    end
+
+    it_should_behave_like 'a route', 'put', '/accounts/own'
+
+    describe 'Bad Request errors' do
+      describe 'session ID not given error' do
+        before do
+          put '/own', {token: 'test_token', app_key: 'test_key'}
+        end
+        it 'Returns a Bad Request (400) error when the session identifier is not given' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body if the session identifier is not given' do
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.session_id'})
+        end
+      end
+    end
+
+    describe 'Unprocessable Entity errors' do
+      describe 'username is too short error' do
+        before do
+          put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', username: 'test'}
+        end
+        it 'Returns an Unprocessable entity (422) response status if the username is too short' do
+          expect(last_response.status).to be 422
+        end
+        it 'Returns the correct body if the username is too short' do
+          expect(JSON.parse(last_response.body)).to eq({'errors' => ['account.username.short']})
+        end
+      end
+      describe 'username already used when given error' do
+        let!(:second_account) { create(:second_account) }
+        before do
+          put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', username: second_account.username}
+        end
+        it 'Returns an Unprocessable entity (422) response status if the username is already taken' do
+          expect(last_response.status).to be 422
+        end
+        it 'Returns the correct body if the username is already taken' do
+          expect(JSON.parse(last_response.body)).to eq({'errors' => ['account.username.uniq']})
+        end
+      end
+      describe 'email already used when given error' do
+        let!(:second_account) { create(:second_account) }
+        before do
+          put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', email: second_account.email}
+        end
+        it 'Returns an Unprocessable entity (422) response status if the email is already taken' do
+          expect(last_response.status).to be 422
+        end
+        it 'Returns the correct body if the email is already taken' do
+          expect(JSON.parse(last_response.body)).to eq({'errors' => ['account.email.uniq']})
+        end
+      end
+    end
+  end
 end
