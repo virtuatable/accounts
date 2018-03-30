@@ -15,6 +15,16 @@ class AccountsController < Arkaan::Utils::Controller
     end
   end
 
+  declare_route('get', '/own') do
+    check_presence('session_id')
+    account = Arkaan::Authentication::Session.where(token: params['session_id']).first.account
+    if account.nil?
+      halt 404, {message: 'account_not_found'}.to_json
+    else
+      halt 200,  {account: Decorators::Account.new(account).to_h}.to_json
+    end
+  end
+
   # @see https://github.com/jdr-tools/accounts/wiki/Obtaining-account-informations
   declare_route('get', '/:id') do
     account = Arkaan::Account.where(id: params[:id]).first

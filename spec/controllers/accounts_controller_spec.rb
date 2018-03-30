@@ -255,6 +255,58 @@ RSpec.describe AccountsController do
     end
   end
 
+  describe 'get /accounts/own' do
+
+    let!(:session) { create(:session, account: account) }
+
+    describe 'Nominal case' do
+      before do
+        get "/own?session_id=#{session.token}&token=test_token&app_key=test_key"
+      end
+      it 'Returns an OK (200) response when the account exists' do
+        expect(last_response.status).to be 200
+      end
+      describe 'Account attributes' do
+        let!(:parsed_account) { JSON.parse(last_response.body)['account'] }
+
+        it 'returns an account with the correct id' do
+          expect(parsed_account['id']).to eq account.id.to_s
+        end
+        it 'Returns an account with the correct username' do
+          expect(parsed_account['username']).to eq(account.username)
+        end
+        it 'Returns an account with the correct email' do
+          expect(parsed_account['email']).to eq(account.email)
+        end
+        it 'Returns an account with the correct first name' do
+          expect(parsed_account['firstname']).to eq(account.firstname)
+        end
+        it 'Returns an account with the correct last name' do
+          expect(parsed_account['lastname']).to eq(account.lastname)
+        end
+        it 'Returns an account with the correct birthdate' do
+          expect(DateTime.parse(parsed_account['birthdate'])).to eq(account.birthdate)
+        end
+      end
+    end
+
+    it_should_behave_like 'a route', 'get', '/accounts/own'
+
+    describe 'Bad Request errors' do
+      describe 'session ID not given error' do
+        before do
+          get "/own?token=test_token&app_key=test_key"
+        end
+        it 'Returns a Bad Request (400) error when the session identifier is not given' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body if the session identifier is not given' do
+          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.session_id'})
+        end
+      end
+    end
+  end
+
   describe 'put /accounts/own' do
 
     let!(:session) { create(:session, account: account) }
