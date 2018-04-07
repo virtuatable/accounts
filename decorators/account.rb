@@ -13,7 +13,7 @@ module Decorators
         lastname: lastname,
         firstname: firstname,
         email: email,
-        birthdate: birthdate,
+        birthdate: birthdate.utc.iso8601,
         rights: get_rights
       }
     end
