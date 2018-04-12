@@ -1,0 +1,43 @@
+errors:
+  common:
+    app_key:
+      forbidden: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-not-premium'
+      required: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-key-not-given'
+      unknown: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-key-not-found'
+    token:
+      required: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#gateway-token-not-given'
+      unknown: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#gateway-token-not-found'
+  creation:
+    email:
+      pattern: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-with-a-wrong-format'
+      required: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-email'
+      uniq: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-already-used'
+    password:
+      required: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password'
+    password_confirmation:
+      confirmation: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#password-confirmation-not-matching'
+      required: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password-confirmation'
+    username:
+      minlength: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-too-short'
+      required: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-username'
+      uniq: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-already-used'
+  informations:
+    account_id:
+      unknown: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#account-id-not-found'
+  own:
+    session_id:
+      required: 'https://github.com/jdr-tools/wiki/wiki/gateway-errors#session-id-not-given'
+      unknown: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#session-id-not-found'
+  update_own:
+    email:
+      pattern: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-with-a-wrong-format-1'
+      uniq: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-already-used-1'
+    password_confirmation:
+      confirmation: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#password-confirmation-not-matching-1'
+      required: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password-confirmation-1'
+    session_id:
+      required: 'https://github.com/jdr-tools/wiki/wiki/gateway-errors#session-id-not-given'
+      unknown: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#session-id-not-found'
+    username:
+      minlength: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-too-short-1'
+      uniq: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-already-used-1'

@@ -81,7 +81,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'username',
             'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Errors#parameter-not-given'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-username'
           })
         end
       end
@@ -97,7 +97,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'password',
             'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Errors#parameter-not-given'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password'
           })
         end
       end
@@ -113,7 +113,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'password_confirmation',
             'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Errors#parameter-not-given'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password-confirmation'
           })
         end
       end
@@ -129,7 +129,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'email',
             'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Errors#parameter-not-given'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-email'
           })
         end
       end
@@ -146,7 +146,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'username',
             'error' => 'uniq',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#username-already-used'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-already-used'
           })
         end
       end
@@ -162,7 +162,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'username',
             'error' => 'minlength',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#username-too-short'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-too-short'
           })
         end
       end
@@ -179,7 +179,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'email',
             'error' => 'uniq',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#email-already-used'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-already-used'
           })
         end
       end
@@ -195,7 +195,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'email',
             'error' => 'pattern',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#email-with-a-wrong-format'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-with-a-wrong-format'
           })
         end
       end
@@ -211,7 +211,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'password_confirmation',
             'error' => 'confirmation',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#password-confirmation-not-matching'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#password-confirmation-not-matching'
           })
         end
       end
@@ -229,7 +229,7 @@ RSpec.describe AccountsController do
             'status' => 403,
             'field' => 'app_key',
             'error' => 'forbidden',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Errors#application-not-premium'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-not-premium'
           })
         end
       end
@@ -294,7 +294,7 @@ RSpec.describe AccountsController do
             'status' => 404,
             'field' => 'account_id',
             'error' => 'unknown',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Obtaining-account-informations#not-found-404-errors'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#account-id-not-found'
           })
         end
       end
@@ -351,7 +351,7 @@ RSpec.describe AccountsController do
             'status' => 404,
             'field' => 'session_id',
             'error' => 'unknown',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Getting-own-profile-informations#session-id-not-found'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#session-id-not-found'
           })
         end
       end
@@ -370,7 +370,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'session_id',
             'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Errors#parameter-not-given'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/gateway-errors#session-id-not-given'
           })
         end
       end
@@ -597,7 +597,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'session_id',
             'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Errors#parameter-not-given'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/gateway-errors#session-id-not-given'
           })
         end
       end
@@ -613,7 +613,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'password_confirmation',
             'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/arkaan/wiki/Errors#parameter-not-given'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password-confirmation-1'
           })
         end
       end
@@ -632,7 +632,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'username',
             'error' => 'minlength',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#username-too-short'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-too-short-1'
           })
         end
       end
@@ -649,7 +649,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'username',
             'error' => 'uniq',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#username-already-used'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-already-used-1'
           })
         end
       end
@@ -671,7 +671,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'password_confirmation',
             'error' => 'confirmation',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#password-confirmation-not-matching'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#password-confirmation-not-matching-1'
           })
         end
       end
@@ -688,7 +688,7 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'email',
             'error' => 'uniq',
-            'docs' => 'https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account#email-already-used'
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-already-used-1'
           })
         end
       end
