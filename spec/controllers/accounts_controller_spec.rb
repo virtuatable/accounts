@@ -10,8 +10,8 @@ RSpec.describe AccountsController do
   let!(:application) { create(:application, creator: account) }
   let!(:birthdate) { DateTime.new(1989, 8, 29, 21, 50) }
 
-  describe 'post /accounts' do
-    describe 'nominal case' do
+  describe 'POST /accounts' do
+    describe 'Nominal case' do
       before do
         post '/', {
           token: 'test_token',
@@ -25,10 +25,10 @@ RSpec.describe AccountsController do
           birthdate: birthdate
         }.to_json
       end
-      it 'returns a Created (201) code when an account is correctly created' do
+      it 'Returns a Created (201) status' do
         expect(last_response.status).to be 201
       end
-      it 'correctly creates an account when all the informations are being given' do
+      it 'Creates an account' do
         expect(JSON.parse(last_response.body)).to eq({
           'message' => 'created',
           'item' => {
@@ -42,25 +42,25 @@ RSpec.describe AccountsController do
           }
         })
       end
-      describe 'created account' do
+      describe 'Created account fields' do
         let(:created_account) { Arkaan::Account.where(username: 'Babausse').first }
 
-        it 'has created an account with the correct username' do
+        it 'Has a username' do
           expect(created_account.username).to eq 'Babausse'
         end
-        it 'has created an account with the correct password' do
+        it 'Has a password digest corresponding to the password' do
           expect(created_account.authenticate('password')).to be_truthy
         end
-        it 'has created an account with the correct email' do
+        it 'Has an email' do
           expect(created_account.email).to eq 'test@test.com'
         end
-        it 'has created an account with the correct first name' do
+        it 'Has a first name' do
           expect(created_account.firstname).to eq 'Vincent'
         end
-        it 'has created an account with the correct last name' do
+        it 'Has a last name' do
           expect(created_account.lastname).to eq 'Courtois'
         end
-        it 'has created an account with the correct birth date' do
+        it 'Has a birth date' do
           expect(created_account.birthdate).to eq DateTime.new(1989, 8, 29, 21, 50)
         end
       end
@@ -68,175 +68,174 @@ RSpec.describe AccountsController do
 
     it_should_behave_like 'a route', 'post', '/'
 
-    describe 'bad request errors' do
-      describe 'no username error' do
+    describe '400 errors' do
+      describe 'Username not given' do
         before do
           post '/', {token: 'test_token', app_key: 'test_key', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
         end
-        it 'Raises a Bad Request (400) error when the username is not given' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body when the username is not given' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'username',
-            'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-username'
+            'error' => 'required'
           })
         end
       end
-      describe 'no password error' do
+
+      describe 'Password not given' do
         before do
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password_confirmation: 'password', email: 'test@test.com'}.to_json
         end
-        it 'Raises a Bad Request (400) error when the password is not given' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body when the password is not given' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'password',
-            'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password'
+            'error' => 'required'
           })
         end
       end
-      describe 'no password confirmation error' do
+
+      describe 'Password confirmation not given' do
         before do
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', email: 'test@test.com'}.to_json
         end
-        it 'Raises a Bad Request (400) error when the password confirmation is not given' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body when the password confirmation is not given' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'password_confirmation',
-            'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password-confirmation'
+            'error' => 'required'
           })
         end
       end
-      describe 'no email error' do
+
+      describe 'Email not given' do
         before do
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password'}.to_json
         end
-        it 'Raises a Bad Request (400) error when the email is not given' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body when the email is not given' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'email',
-            'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-email'
+            'error' => 'required'
           })
         end
       end
-      describe 'already taken username error' do
+
+      describe 'Username already taken' do
         before do
           create(:other_account, username: 'Babausse', email: 'another@test.com')
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
         end
-        it 'Raises an Bad Request (400) error when the username is already taken' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body is the username is already taken' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'username',
-            'error' => 'uniq',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-already-used'
+            'error' => 'uniq'
           })
         end
       end
-      describe 'too short username error' do
+
+      describe 'Username too short' do
         before do
           post '/', {token: 'test_token', app_key: 'test_key', username: 'test', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
         end
-        it 'Raises an Bad Request (400) error when the username is too short' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body when the username is too short' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'username',
-            'error' => 'minlength',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-too-short'
+            'error' => 'minlength'
           })
         end
       end
-      describe 'already taken email error' do
+
+      describe 'Email already taken' do
         before do
           create(:other_account, username: 'Another random username', email: 'test@test.com')
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
         end
-        it 'Raises an Bad Request (400) error when the email is already taken' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body when the email is already taken' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'email',
-            'error' => 'uniq',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-already-used'
+            'error' => 'uniq'
           })
         end
       end
-      describe 'bad format email error' do
+
+      describe 'Email with a bad format' do
         before do
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test'}.to_json
         end
-        it 'Raises an Bad Request (400) error when the email has a wrong format' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body when the email has a wrong format' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'email',
-            'error' => 'pattern',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-with-a-wrong-format'
+            'error' => 'pattern'
           })
         end
       end
-      describe 'password confirmation not matching error' do
+
+      describe 'Password confirmation not matching' do
         before do
           post '/', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'another password', email: 'test@test.com'}.to_json
         end
-        it 'Raises an Bad Request (400) error when the password confirmation does not match the password' do
+        it 'Raises a 400 error' do
           expect(last_response.status).to be 400
         end
-        it 'returns a correct body when the password confirmation does not match the password' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'password_confirmation',
-            'error' => 'confirmation',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#password-confirmation-not-matching'
+            'error' => 'confirmation'
           })
         end
       end
     end
-    describe 'unauthorized errors' do
-      describe 'not premium application' do
+
+    describe '403 errors' do
+      describe 'Application not premium' do
         before do
           post '/', {token: 'test_token', app_key: 'other_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
         end
-        it 'Raises an Unauthorized (401) error when the application issuing the request is not premium' do
+        it 'Raises a 403 error' do
           expect(last_response.status).to be 403
         end
-        it 'returns a correct body when the application is not premium' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 403,
             'field' => 'app_key',
-            'error' => 'forbidden',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-not-premium'
+            'error' => 'forbidden'
           })
         end
       end
     end
   end
 
-  describe 'get /accounts/:id' do
+  describe 'GET /accounts/:id' do
     let!(:category) { create(:category) }
     let!(:right) { create(:right, category: category) }
     let!(:group) {
@@ -245,35 +244,36 @@ RSpec.describe AccountsController do
       account.save!
       tmp_group
     }
+
     describe 'Nominal case' do
       before do
         get "/#{account.id.to_s}?token=test_token&app_key=test_key"
       end
-      it 'Returns an OK (200) response when the account exists' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
       describe 'Account attributes' do
         let!(:parsed_account) { JSON.parse(last_response.body)['account'] }
 
-        it 'returns an account with the correct id' do
+        it 'Has an ID' do
           expect(parsed_account['id']).to eq account.id.to_s
         end
-        it 'Returns an account with the correct username' do
+        it 'Has a username' do
           expect(parsed_account['username']).to eq(account.username)
         end
-        it 'Returns an account with the correct email' do
+        it 'Has an email' do
           expect(parsed_account['email']).to eq(account.email)
         end
-        it 'Returns an account with the correct first name' do
+        it 'Has a firstname' do
           expect(parsed_account['firstname']).to eq(account.firstname)
         end
-        it 'Returns an account with the correct last name' do
+        it 'Has a lastname' do
           expect(parsed_account['lastname']).to eq(account.lastname)
         end
-        it 'Returns an account with the correct birthdate' do
+        it 'Has a birthdate' do
           expect(DateTime.parse(parsed_account['birthdate'])).to eq(account.birthdate)
         end
-        it 'Returns an account with the correct rights' do
+        it 'Has rights' do
           expect(parsed_account['rights']).to eq([{'id' => right.id.to_s, 'slug' => 'test_category.test_right'}])
         end
       end
@@ -281,15 +281,15 @@ RSpec.describe AccountsController do
 
     it_should_behave_like 'a route', 'get', '/accounts/account_id'
 
-    describe 'not found errors' do
-      describe 'account not found' do
+    describe '404 errors' do
+      describe 'Account ID not found' do
         before do
           get "unexisting_id?token=test_token&app_key=test_key"
         end
-        it 'Returns a Not Found (404) error when the account does not exist' do
+        it 'Raises a 404 error' do
           expect(last_response.status).to be 404
         end
-        it 'Returns the correct message when an account does not exist' do
+        it 'Returns the correct body' do
           expect(JSON.parse(last_response.body)).to eq({
             'status' => 404,
             'field' => 'account_id',
@@ -301,7 +301,7 @@ RSpec.describe AccountsController do
     end
   end
 
-  describe 'get /accounts/own' do
+  describe 'GET /accounts/own' do
 
     let!(:session) { create(:session, account: account) }
 
@@ -309,28 +309,28 @@ RSpec.describe AccountsController do
       before do
         get "/own?session_id=#{session.token}&token=test_token&app_key=test_key"
       end
-      it 'Returns an OK (200) response when the account exists' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
       describe 'Account attributes' do
         let!(:parsed_account) { JSON.parse(last_response.body)['account'] }
 
-        it 'returns an account with the correct id' do
+        it 'Has an ID' do
           expect(parsed_account['id']).to eq account.id.to_s
         end
-        it 'Returns an account with the correct username' do
+        it 'Has a username' do
           expect(parsed_account['username']).to eq(account.username)
         end
-        it 'Returns an account with the correct email' do
+        it 'Has an email' do
           expect(parsed_account['email']).to eq(account.email)
         end
-        it 'Returns an account with the correct first name' do
+        it 'Has a firstname' do
           expect(parsed_account['firstname']).to eq(account.firstname)
         end
-        it 'Returns an account with the correct last name' do
+        it 'Has a lastname' do
           expect(parsed_account['lastname']).to eq(account.lastname)
         end
-        it 'Returns an account with the correct birthdate' do
+        it 'Has a birthdate' do
           expect(DateTime.parse(parsed_account['birthdate'])).to eq(account.birthdate)
         end
       end
@@ -338,39 +338,37 @@ RSpec.describe AccountsController do
 
     it_should_behave_like 'a route', 'get', '/accounts/own'
 
-    describe 'not found errors' do
-      describe 'session not found error' do
+    describe '400 errors' do
+      describe 'session ID not given' do
         before do
-          get "own?session_id=unknown_token&token=test_token&app_key=test_key"
+          get "/own?token=test_token&app_key=test_key"
         end
-        it 'Returns a Not Found (404) error when the session does not exist' do
-          expect(last_response.status).to be 404
+        it 'Raises a 400 error' do
+          expect(last_response.status).to be 400
         end
-        it 'Returns the correct message when an session does not exist' do
-          expect(JSON.parse(last_response.body)).to eq({
-            'status' => 404,
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
+            'status' => 400,
             'field' => 'session_id',
-            'error' => 'unknown',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#session-id-not-found'
+            'error' => 'required'
           })
         end
       end
     end
 
-    describe 'Bad Request errors' do
-      describe 'session ID not given error' do
+    describe '404 errors' do
+      describe 'Session ID not found' do
         before do
-          get "/own?token=test_token&app_key=test_key"
+          get "own?session_id=unknown_token&token=test_token&app_key=test_key"
         end
-        it 'Returns a Bad Request (400) error when the session identifier is not given' do
-          expect(last_response.status).to be 400
+        it 'Raises a 404 error' do
+          expect(last_response.status).to be 404
         end
-        it 'Returns the correct body if the session identifier is not given' do
-          expect(JSON.parse(last_response.body)).to eq({
-            'status' => 400,
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
+            'status' => 404,
             'field' => 'session_id',
-            'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/gateway-errors#session-id-not-given'
+            'error' => 'unknown'
           })
         end
       end
@@ -385,10 +383,10 @@ RSpec.describe AccountsController do
       before do
         put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key'}
       end
-      it 'Returns a OK (200) response code when the account is updated with nothing' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
-      it 'Returns the correct body when the account is updated with nothing' do
+      it 'Returns the correct body' do
         expect(JSON.parse(last_response.body)).to eq({
           'message' => 'updated',
           'item' => {
@@ -402,37 +400,37 @@ RSpec.describe AccountsController do
           }
         })
       end
-      describe 'campaign parameters' do
+      describe 'Campaign parameters' do
         let!(:created_account) { Arkaan::Account.all.first }
 
-        it 'has not modified the username of the user' do
+        it 'Has a username' do
           expect(created_account.username).to eq 'Autre compte'
         end
-        it 'has not modified the password of the user' do
+        it 'Has a password' do
           expect(created_account.authenticate('long_password')).to be_truthy
         end
-        it 'has not modified the email address of the user' do
+        it 'Has an email' do
           expect(created_account.email).to eq 'machin@test.com'
         end
-        it 'has not modifier the first name of the user' do
+        it 'Has a firstname' do
           expect(created_account.firstname).to eq 'Vincent'
         end
-        it 'has not modified the last name of the user' do
+        it 'Has a lastname' do
           expect(created_account.lastname).to eq 'Courtois'
         end
-        it 'has not modified the birth date of the user' do
+        it 'Has a birthdate' do
           expect(created_account.birthdate).to eq DateTime.new(1989, 8, 29, 21, 50)
         end
       end
     end
-    describe 'username being updated' do
+    describe 'Username being updated' do
       before do
         put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', username: 'Compte de test'}
       end
-      it 'Returns a OK (200) response code when the username is correctly updated' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
-      it 'Returns the correct body when the username is updated' do
+      it 'Returns the correct body' do
         expect(JSON.parse(last_response.body)).to eq({
           'message' => 'updated',
           'item' => {
@@ -446,11 +444,11 @@ RSpec.describe AccountsController do
           }
         })
       end
-      it 'Correctly updated the username on the user' do
+      it 'Updates the username' do
         expect(Arkaan::Account.first.username).to eq 'Compte de test'
       end
     end
-    describe 'password being updated' do
+    describe 'Password being updated' do
       before do
         put '/own', {
           session_id: session.token,
@@ -460,10 +458,10 @@ RSpec.describe AccountsController do
           password_confirmation: 'new_password'
         }
       end
-      it 'Returns a OK (200) response code when the password is correctly updated' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
-      it 'Returns the correct body when the password is updated' do
+      it 'Returns the correct body' do
         expect(JSON.parse(last_response.body)).to eq({
           'message' => 'updated',
           'item' => {
@@ -477,18 +475,18 @@ RSpec.describe AccountsController do
           }
         })
       end
-      it 'Correctly updates the password on the account' do
+      it 'Updates the password' do
         expect(Arkaan::Account.first.authenticate('new_password')).to be_truthy
       end
     end
-    describe 'email being updated' do
+    describe 'Email being updated' do
       before do
         put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', email: 'test@mail.com'}
       end
-      it 'Returns a OK (200) response code when the email is correctly updated' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
-      it 'Returns the correct body when the email is updated' do
+      it 'Returns the correct body' do
         expect(JSON.parse(last_response.body)).to eq({
           'message' => 'updated',
           'item' => {
@@ -502,7 +500,7 @@ RSpec.describe AccountsController do
           }
         })
       end
-      it 'Correctly updated the email on the user' do
+      it 'Updates the email' do
         expect(Arkaan::Account.first.email).to eq 'test@mail.com'
       end
     end
@@ -510,10 +508,10 @@ RSpec.describe AccountsController do
       before do
         put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', firstname: 'Babausse'}
       end
-      it 'Returns a OK (200) response code when the first name is correctly updated' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
-      it 'Returns the correct body when the first name is updated' do
+      it 'Returns the correct body' do
         expect(JSON.parse(last_response.body)).to eq({
           'message' => 'updated',
           'item' => {
@@ -527,7 +525,7 @@ RSpec.describe AccountsController do
           }
         })
       end
-      it 'Correctly updated the first name on the user' do
+      it 'Updates the first name' do
         expect(Arkaan::Account.first.firstname).to eq 'Babausse'
       end
     end
@@ -535,10 +533,10 @@ RSpec.describe AccountsController do
       before do
         put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', lastname: 'Babausse'}
       end
-      it 'Returns a OK (200) response code when the last name is correctly updated' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
-      it 'Returns the correct body when the last name is updated' do
+      it 'Returns the correct body' do
         expect(JSON.parse(last_response.body)).to eq({
           'message' => 'updated',
           'item' => {
@@ -552,7 +550,7 @@ RSpec.describe AccountsController do
           }
         })
       end
-      it 'Correctly updated the last name on the user' do
+      it 'Updates the last name' do
         expect(Arkaan::Account.first.lastname).to eq 'Babausse'
       end
     end
@@ -560,10 +558,10 @@ RSpec.describe AccountsController do
       before do
         put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', birthdate: DateTime.new(2000, 6, 12, 23, 51)}
       end
-      it 'Returns a OK (200) response code when the birth date is correctly updated' do
+      it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
-      it 'Returns the correct body when the birth date is updated' do
+      it 'Returns the correct body' do
         expect(JSON.parse(last_response.body)).to eq({
           'message' => 'updated',
           'item' => {
@@ -577,83 +575,80 @@ RSpec.describe AccountsController do
           }
         })
       end
-      it 'Correctly updated the birth date on the user' do
+      it 'Updates the birth date' do
         expect(Arkaan::Account.first.birthdate).to eq DateTime.new(2000, 6, 12, 23, 51)
       end
     end
 
     it_should_behave_like 'a route', 'put', '/accounts/own'
 
-    describe 'Bad Request errors' do
-      describe 'session ID not given error' do
+    describe '400 errors' do
+      describe 'session ID not given' do
         before do
           put '/own', {token: 'test_token', app_key: 'test_key'}
         end
-        it 'Returns a Bad Request (400) error when the session identifier is not given' do
+        it 'Raises a Bad Request (400) status' do
           expect(last_response.status).to be 400
         end
-        it 'Returns the correct body if the session identifier is not given' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'session_id',
-            'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/gateway-errors#session-id-not-given'
+            'error' => 'required'
           })
         end
       end
-      describe 'password confirmation not given error' do
+
+      describe 'password confirmation not given' do
         before do
           put '/own', {token: 'test_token', app_key: 'test_key', session_id: session.token, password: 'new_password'}
         end
-        it 'Returns a Bad Request (400) error when the password confirmation is not given with the password' do
+        it 'Raises a Bad Request (400) status' do
           expect(last_response.status).to be 400
         end
-        it 'Returns the correct body if the password confirmation is not given with the password' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'password_confirmation',
             'error' => 'required',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#missing-password-confirmation-1'
           })
         end
       end
-    end
 
-    describe 'Unprocessable Entity errors' do
-      describe 'username is too short error' do
+      describe 'Username too short' do
         before do
           put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', username: 'test'}
         end
-        it 'Returns an Bad Request (422) response status if the username is too short' do
+        it 'Raises a Bad Request (400) status' do
           expect(last_response.status).to be 400
         end
-        it 'Returns the correct body if the username is too short' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'username',
-            'error' => 'minlength',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-too-short-1'
+            'error' => 'minlength'
           })
         end
       end
-      describe 'username already used when given error' do
+
+      describe 'Username already used' do
         let!(:second_account) { create(:second_account) }
         before do
           put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', username: second_account.username}
         end
-        it 'Returns an Bad Request (422) response status if the username is already taken' do
+        it 'Raises a Bad Request (400) status' do
           expect(last_response.status).to be 400
         end
-        it 'Returns the correct body if the username is already taken' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'username',
-            'error' => 'uniq',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#username-already-used-1'
+            'error' => 'uniq'
           })
         end
       end
-      describe 'password and confirmation not matching error' do
+
+      describe 'Password confirmation not matching' do
         before do
           put '/own', {
             session_id: session.token,
@@ -663,32 +658,31 @@ RSpec.describe AccountsController do
             password_confirmation: 'another_new_password'
           }
         end
-        it 'Returns an Bad Request (400) response status if the confirmation does not match the password' do
+        it 'Raises a Bad Request (400) status' do
           expect(last_response.status).to be 400
         end
-        it 'Returns the correct body if the confirmation does not match the password' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'password_confirmation',
-            'error' => 'confirmation',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#password-confirmation-not-matching-1'
+            'error' => 'confirmation'
           })
         end
       end
-      describe 'email already used when given error' do
+
+      describe 'email already used' do
         let!(:second_account) { create(:second_account) }
         before do
           put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', email: second_account.email}
         end
-        it 'Returns an Bad Request (422) response status if the email is already taken' do
+        it 'Raises a Bad Request (400) status' do
           expect(last_response.status).to be 400
         end
-        it 'Returns the correct body if the email is already taken' do
-          expect(JSON.parse(last_response.body)).to eq({
+        it 'Returns the correct body' do
+          expect(JSON.parse(last_response.body)).to include_json({
             'status' => 400,
             'field' => 'email',
-            'error' => 'uniq',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-already-used-1'
+            'error' => 'uniq'
           })
         end
       end
