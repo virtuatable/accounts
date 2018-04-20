@@ -8,7 +8,6 @@ RSpec.describe AccountsController do
   let!(:gateway) { create(:gateway) }
   let!(:premium_application) { create(:premium_application, creator: account) }
   let!(:application) { create(:application, creator: account) }
-  let!(:birthdate) { DateTime.new(1989, 8, 29, 21, 50) }
 
   describe 'post /accounts' do
     describe 'nominal case' do
@@ -21,8 +20,7 @@ RSpec.describe AccountsController do
           password_confirmation: 'password',
           email: 'test@test.com',
           firstname: 'Vincent',
-          lastname: 'Courtois',
-          birthdate: birthdate
+          lastname: 'Courtois'
         }.to_json
       end
       it 'returns a Created (201) code when an account is correctly created' do
@@ -37,7 +35,6 @@ RSpec.describe AccountsController do
             'email' => 'test@test.com',
             'firstname' => 'Vincent',
             'lastname' => 'Courtois',
-            'birthdate' => birthdate.utc.iso8601,
             'rights' => []
           }
         })
@@ -59,9 +56,6 @@ RSpec.describe AccountsController do
         end
         it 'has created an account with the correct last name' do
           expect(created_account.lastname).to eq 'Courtois'
-        end
-        it 'has created an account with the correct birth date' do
-          expect(created_account.birthdate).to eq DateTime.new(1989, 8, 29, 21, 50)
         end
       end
     end
@@ -270,9 +264,6 @@ RSpec.describe AccountsController do
         it 'Returns an account with the correct last name' do
           expect(parsed_account['lastname']).to eq(account.lastname)
         end
-        it 'Returns an account with the correct birthdate' do
-          expect(DateTime.parse(parsed_account['birthdate'])).to eq(account.birthdate)
-        end
         it 'Returns an account with the correct rights' do
           expect(parsed_account['rights']).to eq([{'id' => right.id.to_s, 'slug' => 'test_category.test_right'}])
         end
@@ -329,9 +320,6 @@ RSpec.describe AccountsController do
         end
         it 'Returns an account with the correct last name' do
           expect(parsed_account['lastname']).to eq(account.lastname)
-        end
-        it 'Returns an account with the correct birthdate' do
-          expect(DateTime.parse(parsed_account['birthdate'])).to eq(account.birthdate)
         end
       end
     end
@@ -397,7 +385,6 @@ RSpec.describe AccountsController do
             'email' => account.email,
             'firstname' => account.firstname,
             'lastname' => account.lastname,
-            'birthdate' => account.birthdate.utc.iso8601,
             'rights' => []
           }
         })
@@ -420,9 +407,6 @@ RSpec.describe AccountsController do
         it 'has not modified the last name of the user' do
           expect(created_account.lastname).to eq 'Courtois'
         end
-        it 'has not modified the birth date of the user' do
-          expect(created_account.birthdate).to eq DateTime.new(1989, 8, 29, 21, 50)
-        end
       end
     end
     describe 'username being updated' do
@@ -441,7 +425,6 @@ RSpec.describe AccountsController do
             'email' => account.email,
             'firstname' => account.firstname,
             'lastname' => account.lastname,
-            'birthdate' => account.birthdate.utc.iso8601,
             'rights' => []
           }
         })
@@ -472,7 +455,6 @@ RSpec.describe AccountsController do
             'email' => account.email,
             'firstname' => account.firstname,
             'lastname' => account.lastname,
-            'birthdate' => account.birthdate.utc.iso8601,
             'rights' => []
           }
         })
@@ -497,7 +479,6 @@ RSpec.describe AccountsController do
             'email' => 'test@mail.com',
             'firstname' => account.firstname,
             'lastname' => account.lastname,
-            'birthdate' => account.birthdate.utc.iso8601,
             'rights' => []
           }
         })
@@ -522,7 +503,6 @@ RSpec.describe AccountsController do
             'email' => account.email,
             'firstname' => 'Babausse',
             'lastname' => account.lastname,
-            'birthdate' => account.birthdate.utc.iso8601,
             'rights' => []
           }
         })
@@ -547,38 +527,12 @@ RSpec.describe AccountsController do
             'email' => account.email,
             'firstname' => account.firstname,
             'lastname' => 'Babausse',
-            'birthdate' => account.birthdate.utc.iso8601,
             'rights' => []
           }
         })
       end
       it 'Correctly updated the last name on the user' do
         expect(Arkaan::Account.first.lastname).to eq 'Babausse'
-      end
-    end
-    describe 'birth date being updated' do
-      before do
-        put '/own', {session_id: session.token, token: 'test_token', app_key: 'test_key', birthdate: DateTime.new(2000, 6, 12, 23, 51)}
-      end
-      it 'Returns a OK (200) response code when the birth date is correctly updated' do
-        expect(last_response.status).to be 200
-      end
-      it 'Returns the correct body when the birth date is updated' do
-        expect(JSON.parse(last_response.body)).to eq({
-          'message' => 'updated',
-          'item' => {
-            'id' => account.id.to_s,
-            'username' => account.username,
-            'email' => account.email,
-            'firstname' => account.firstname,
-            'lastname' => account.lastname,
-            'birthdate' => DateTime.new(2000, 6, 12, 23, 51).utc.iso8601,
-            'rights' => []
-          }
-        })
-      end
-      it 'Correctly updated the birth date on the user' do
-        expect(Arkaan::Account.first.birthdate).to eq DateTime.new(2000, 6, 12, 23, 51)
       end
     end
 

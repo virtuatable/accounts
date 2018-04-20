@@ -57,7 +57,7 @@ class AccountsController < Arkaan::Utils::Controller
   # @return [Hash<String, Object>] the hash composed of the selected keys.
   def account_parameters
     params.select do |key, value|
-      ['username', 'password', 'password_confirmation', 'firstname', 'lastname', 'birthdate', 'email'].include?(key)
+      ['username', 'password', 'password_confirmation', 'firstname', 'lastname', 'email'].include?(key)
     end
   end
 end
