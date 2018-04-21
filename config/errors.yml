@@ -1,4 +1,12 @@
 errors:
+  add_phone:
+    number:
+      required: ''
+    privacy:
+      required: ''
+    session_id:
+      required: ''
+      unknown: ''
   common:
     app_key:
       forbidden: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-not-premium'
@@ -28,6 +36,12 @@ errors:
     session_id:
       required: 'https://github.com/jdr-tools/wiki/wiki/gateway-errors#session-id-not-given'
       unknown: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#session-id-not-found'
+  phone_deletion:
+    phone_id:
+      unknown: ''
+    session_id:
+      required: ''
+      unknown: ''
   update_own:
     email:
       pattern: 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#email-with-a-wrong-format-1'

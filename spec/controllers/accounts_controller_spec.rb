@@ -27,15 +27,15 @@ RSpec.describe AccountsController do
         expect(last_response.status).to be 201
       end
       it 'Creates an account' do
-        expect(JSON.parse(last_response.body)).to eq({
-          'message' => 'created',
-          'item' => {
-            'id' => Arkaan::Account.where(username: 'Babausse').first.id.to_s,
-            'username' => 'Babausse',
-            'email' => 'test@test.com',
-            'firstname' => 'Vincent',
-            'lastname' => 'Courtois',
-            'rights' => []
+        expect(last_response.body).to include_json({
+          message: 'created',
+          item: {
+            id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
+            username: 'Babausse',
+            email: 'test@test.com',
+            firstname: 'Vincent',
+            lastname: 'Courtois',
+            rights: []
           }
         })
       end
@@ -71,10 +71,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'username',
-            'error' => 'required'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'username',
+            error: 'required'
           })
         end
       end
@@ -87,10 +87,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'password',
-            'error' => 'required'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'password',
+            error: 'required'
           })
         end
       end
@@ -103,10 +103,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'password_confirmation',
-            'error' => 'required'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'password_confirmation',
+            error: 'required'
           })
         end
       end
@@ -119,10 +119,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'email',
-            'error' => 'required'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'email',
+            error: 'required'
           })
         end
       end
@@ -136,10 +136,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'username',
-            'error' => 'uniq'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'username',
+            error: 'uniq'
           })
         end
       end
@@ -152,10 +152,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'username',
-            'error' => 'minlength'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'username',
+            error: 'minlength'
           })
         end
       end
@@ -169,10 +169,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'email',
-            'error' => 'uniq'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'email',
+            error: 'uniq'
           })
         end
       end
@@ -185,10 +185,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'email',
-            'error' => 'pattern'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'email',
+            error: 'pattern'
           })
         end
       end
@@ -201,10 +201,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 400
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 400,
-            'field' => 'password_confirmation',
-            'error' => 'confirmation'
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'password_confirmation',
+            error: 'confirmation'
           })
         end
       end
@@ -219,10 +219,10 @@ RSpec.describe AccountsController do
           expect(last_response.status).to be 403
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to include_json({
-            'status' => 403,
-            'field' => 'app_key',
-            'error' => 'forbidden'
+          expect(last_response.body).to include_json({
+            status: 403,
+            field: 'app_key',
+            error: 'forbidden'
           })
         end
       end
@@ -363,7 +363,7 @@ RSpec.describe AccountsController do
     end
   end
 
-  describe 'put /accounts/own' do
+  describe 'PUT /accounts/own' do
 
     let!(:session) { create(:session, account: account) }
 
@@ -637,6 +637,184 @@ RSpec.describe AccountsController do
             'status' => 400,
             'field' => 'email',
             'error' => 'uniq'
+          })
+        end
+      end
+    end
+  end
+
+  describe 'PATCH /accounts/own/phones' do
+    let!(:session) { create(:session, account: account) }
+
+    describe 'Nominal case' do
+      before do
+        patch '/own/phones', {token: 'test_token', app_key: 'test_key', session_id: session.token, privacy: 'players', number: '06.07.08.09.10'}
+      end
+      it 'Returns a Created (201) status' do
+        expect(last_response.status).to be 201
+      end
+      it 'Returns the correct body' do
+        expect(last_response.body).to include_json({
+          message: 'created',
+          item: {
+            number: '06.07.08.09.10',
+            privacy: 'players'
+          }
+        })
+      end
+    end
+
+    it_should_behave_like 'a route', 'patch', '/accounts/own/phones'
+
+    describe '400 errors' do
+      describe 'session ID not given' do
+        before do
+          patch '/own/phones', {token: 'test_token', app_key: 'test_key', privacy: 'players', number: '06.07.08.09.10'}
+        end
+        it 'Returns a 400 status' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'session_id',
+            error: 'required'
+          })
+        end
+      end
+      describe 'number not given' do
+        before do
+          patch '/own/phones', {token: 'test_token', app_key: 'test_key', session_id: session.token, privacy: 'players'}
+        end
+        it 'Returns a 400 status' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'number',
+            error: 'required'
+          })
+        end
+      end
+      describe 'privacy not given' do
+        before do
+          patch '/own/phones', {token: 'test_token', app_key: 'test_key', session_id: session.token, number: '06.07.08.09.10'}
+        end
+        it 'Returns a 400 status' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'privacy',
+            error: 'required'
+          })
+        end
+      end
+      describe 'wrong privacy value' do
+        before do
+          patch '/own/phones', {token: 'test_token', app_key: 'test_key', session_id: session.token, privacy: 'anything', number: '06.07.08.09.10'}
+        end
+        it 'Returns a 400 status' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'privacy',
+            error: 'wrong_value'
+          })
+        end
+      end
+    end
+
+    describe '404 errors' do
+      describe 'session not found' do
+        before do
+          patch '/own/phones', {token: 'test_token', app_key: 'test_key', session_id: 'unknown_token', privacy: 'players', number: '06.07.08.09.10'}
+        end
+        it 'Returns a 404 status' do
+          expect(last_response.status).to be 404
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 404,
+            field: 'session_id',
+            error: 'unknown'
+          })
+        end
+      end
+    end
+  end
+
+  describe 'DELETE /accounts/own/phones/:phone_id' do
+    let!(:session) { create(:session, account: account) }
+    let!(:phone) { create(:phone, account: account) }
+
+    describe 'Nominal case' do
+      before do
+        delete '/own/phones/phone_id', {token: 'test_token', app_key: 'test_key', session_id: session.token}
+      end
+      it 'Returns a OK (200) status' do
+        expect(last_response.status).to be 200
+      end
+      it 'Returns the correct body' do
+        expect(last_response.body).to include_json({message: 'deleted'})
+      end
+      it 'Has deleted the phone' do
+
+      end
+    end
+
+    it_should_behave_like 'a route', 'delete', '/accounts/own/phone'
+
+    describe '400 errors' do
+      describe 'session ID not given' do
+        before do
+          delete '/own/phones/phone_id', {token: 'test_token', app_key: 'test_key'}
+        end
+        it 'Returns a 400 status' do
+          expect(last_response.status).to be 400
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 400,
+            field: 'session_id',
+            error: 'required'
+          })
+        end
+      end
+    end
+
+    describe '404 errors' do
+      describe 'session not found' do
+        before do
+          delete '/own/phones/phone_id', {token: 'test_token', app_key: 'test_key', session_id: 'unknown_token'}
+        end
+        it 'Returns a 404 status' do
+          expect(last_response.status).to be 404
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 404,
+            field: 'session_id',
+            error: 'unknown'
+          })
+        end
+      end
+      describe 'phone not found' do
+        before do
+          delete '/own/phones/unknown_phone_id', {token: 'test_token', app_key: 'test_key', session_id: session.token}
+        end
+        it 'Returns a 404 status' do
+          expect(last_response.status).to be 404
+        end
+        it 'Returns the correct body' do
+          expect(last_response.body).to include_json({
+            status: 404,
+            field: 'phone_id',
+            error: 'unknown'
           })
         end
       end
