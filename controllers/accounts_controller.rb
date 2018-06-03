@@ -9,7 +9,7 @@ class AccountsController < Arkaan::Utils::Controller
   # @see https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account
   declare_premium_route('post', '/') do
     check_presence('username', 'password', 'password_confirmation', 'email', route: 'creation')
-    account = Arkaan::Account.new(account_parameters)
+    account = Services::Accounts.instance.create(account_parameters)
     if account.save
       halt 201, {message: 'created', item: Decorators::Account.new(account).to_h}.to_json
     else
