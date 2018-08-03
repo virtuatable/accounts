@@ -60,6 +60,46 @@ RSpec.describe AccountsController do
       end
     end
 
+    describe 'Alternative cases' do
+      describe 'There is a default group in the DB' do
+        let!(:category) { create(:category) }
+        let!(:right) { create(:right, category: category) }
+        let!(:default_group) { create(:default_group, rights: [right]) }
+
+        before do
+          post '/', {
+            token: 'test_token',
+            app_key: 'test_key',
+            username: 'Babausse',
+            password: 'password',
+            password_confirmation: 'password',
+            email: 'test@test.com',
+            firstname: 'Vincent',
+            lastname: 'Courtois'
+          }.to_json
+        end
+        it 'Returns a 201 (Created) status' do
+          expect(last_response.status).to be 201
+        end
+        it 'returns the correct body' do
+          expect(last_response.body).to include_json({
+            message: 'created',
+            item: {
+              id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
+              username: 'Babausse',
+              email: 'test@test.com',
+              firstname: 'Vincent',
+              lastname: 'Courtois',
+              rights: [{id: right.id.to_s, slug: 'test_category.test_right'}]
+            }
+          })
+        end
+        it 'Has given groups to the created account' do
+          expect(Arkaan::Account.where(username: 'Babausse').first.groups.first.slug).to eq 'test_group'
+        end
+      end
+    end
+
     it_should_behave_like 'a route', 'post', '/'
 
     describe '400 errors' do
