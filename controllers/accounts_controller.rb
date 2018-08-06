@@ -7,7 +7,7 @@ class AccountsController < Arkaan::Utils::Controller
   load_errors_from __FILE__
 
   # @see https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account
-  declare_premium_route('post', '/') do
+  declare_premium_route('post', '/', options: {authenticated: false}) do
     check_presence('username', 'password', 'password_confirmation', 'email', route: 'creation')
     account = Services::Accounts.instance.create(account_parameters)
     if account.save
