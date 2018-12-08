@@ -8,6 +8,6 @@ service = Arkaan::Utils::MicroService.instance
   .from_location(__FILE__)
   .in_standard_mode
 
-map(service.path) { run AccountsController.new }
+run AccountsController
 
 at_exit { Arkaan::Utils::MicroService.instance.deactivate! }
