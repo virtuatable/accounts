@@ -13,6 +13,8 @@ module Decorators
         lastname: lastname,
         firstname: firstname,
         email: email,
+        gender: gender.to_s,
+        language: language.to_s,
         rights: get_rights
       }
     end

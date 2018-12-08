@@ -81,7 +81,7 @@ class AccountsController < Arkaan::Utils::Controller
   # Selects the parameters suited to create an account.
   # @return [Hash<String, Object>] the hash composed of the selected keys.
   def account_parameters
-    return select_params('username', 'password', 'password_confirmation', 'firstname', 'lastname', 'email')
+    return select_params('username', 'password', 'password_confirmation', 'firstname', 'lastname', 'email', 'gender', 'language')
   end
 
   def phone_parameters
