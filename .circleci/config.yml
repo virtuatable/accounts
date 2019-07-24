@@ -57,7 +57,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "SO:ME:FIN:G:ER:PR:IN:T"
+            - "fa:fe:e6:76:13:de:d6:1b:cc:5a:3d:42:3f:60:17:01"
       - checkout
       - run:
           name: Bundle Install
