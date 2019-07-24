@@ -2,7 +2,7 @@
 
 # Main controller of the application, creating and destroying sessions.
 # @author Vincent Courtois <courtois.vincent@outlook.com>
-class AccountsController < Arkaan::Utils::Controller
+class AccountsController < Arkaan::Utils::Controllers::Checked
 
   load_errors_from __FILE__
 
