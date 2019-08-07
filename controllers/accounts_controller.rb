@@ -5,6 +5,8 @@
 class AccountsController < Arkaan::Utils::Controllers::Checked
   load_errors_from __FILE__
 
+  declare_status_route
+
   # @see https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account
   declare_premium_route('post', '/', options: { authenticated: false }) do
     check_presence(
