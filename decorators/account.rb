@@ -3,12 +3,8 @@
 module Decorators
   # Represents an account, with wrapper to easily access its rights.
   # @author Vincent Courtois <courtois.vincent@outlook.com>
-  class Account < Draper::Decorator
-    delegate_all
-
-    def to_json(*_args)
-      to_h.to_json
-    end
+  class Account < Virtuatable::Enhancers::Base
+    enhances Arkaan::Account
 
     def to_h
       {

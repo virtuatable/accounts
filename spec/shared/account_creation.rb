@@ -192,7 +192,7 @@ RSpec.shared_examples 'POST /' do
       end
     end
 
-    it_should_behave_like 'a route', 'post', '/'
+    it_should_behave_like 'a route', 'post', '/accounts', {authenticated: false, premium: true}
 
     describe '400 errors' do
       describe 'Username not given' do

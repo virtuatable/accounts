@@ -3,9 +3,10 @@ source 'https://rubygems.org'
 group :development, :production, :test do
   gem 'sinatra', '2.0.5', require: 'sinatra/base'
   gem 'mongoid', '7.0.1'
-  gem 'arkaan' , '1.6.1'
-  gem 'draper' , '3.1.0'
+  gem 'arkaan' , '2.0.0'
 
+  gem 'require_all'       , '3.0.0'
+  gem 'virtuatable'       , path: '../virtuatable'
   gem 'capistrano'        , '3.11.0'
   gem 'capistrano-bundler', '1.5.0'
   gem 'capistrano-rvm'    , '0.1.1'
