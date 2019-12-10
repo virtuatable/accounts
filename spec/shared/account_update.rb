@@ -56,6 +56,6 @@ RSpec.shared_examples 'PUT /:id' do
       end
     end
 
-    it_should_behave_like 'a route', 'put', '/:id'
+    it_should_behave_like 'a route', 'put', '/accounts/:id', {authenticated: true}
   end
 end

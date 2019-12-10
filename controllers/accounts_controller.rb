@@ -6,7 +6,7 @@ module Controllers
   class Accounts < Virtuatable::Controllers::Base
 
     # @see https://github.com/jdr-tools/accounts/wiki/Creation-of-an-account
-    api_route('post', '/', options: { authenticated: false, premium: true }) do
+    api_route 'post', '/', options: { authenticated: false, premium: true } do
       check_presence('username', 'password', 'password_confirmation', 'email')
       account = Services::Accounts.instance.create(account_parameters)
       account.save!
@@ -16,10 +16,25 @@ module Controllers
       })
     end
 
-    # declare_route('get', '/own') do
-    #   session = check_session('own')
-    #   halt 200, { account: Decorators::Account.new(session.account).to_h }.to_json
-    # end
+    api_route 'put', '/:id' do
+      updated = get_account
+      if params.key? 'groups'
+        unknown_groups_exist = params['groups'].any? do |group_id|
+          Arkaan::Permissions::Group.where(id: group_id).first.nil?
+        end
+        api_not_found 'group_id.unknown' if unknown_groups_exist
+        updated.group_ids = params['groups']
+        updated.save!
+        api_item({
+          message: 'updated',
+          item: updated.enhance!.to_h
+        })
+      end
+    end
+
+    api_route 'get', '/own' do
+      halt 200, { account: account!.enhance!.to_h }.to_json
+    end
 
     # # @see https://github.com/jdr-tools/accounts/wiki/Obtaining-account-informations
     # declare_route('get', '/:account_id') do
@@ -45,25 +60,6 @@ module Controllers
     #   end
     # end
 
-    # declare_premium_route('put', '/:id') do
-    #   check_session('update')
-    #   account = Arkaan::Account.where(id: params['id']).first
-    #   custom_error 404, 'update.account_id.unknown' if account.nil?
-    #   if params.key? 'groups'
-    #     unknown_groups_exist = params['groups'].any? do |group_id|
-    #       Arkaan::Permissions::Group.where(id: group_id).first.nil?
-    #     end
-    #     custom_error 404, 'update.group_id.unknown' if unknown_groups_exist
-    #     account.group_ids = params['groups']
-    #     if account.save
-    #       item = Decorators::Account.new(account).to_h
-    #       halt 200, { message: 'updated', item: item }.to_json
-    #     else
-    #       model_error(account, 'update')
-    #     end
-    #   end
-    # end
-
     # Selects the parameters suited to create an account.
     # @return [Hash<String, Object>] the hash composed of the selected keys.
     def account_parameters
@@ -77,6 +73,12 @@ module Controllers
         'password_confirmation',
         'username'
       )
+    end
+
+    def get_account
+      account = Arkaan::Account.where(id: params['id']).first
+      api_not_found 'account_id.unknown' if account.nil?
+      account
     end
 
     def select_params(*fields)
