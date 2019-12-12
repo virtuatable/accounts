@@ -8,10 +8,15 @@ RSpec.shared_examples 'GET /:id' do
       account.save!
       tmp_group
     }
+    let!(:session) { create(:session, account: account) }
 
     describe 'Nominal case' do
       before do
-        get "/accounts/#{account.id.to_s}?token=test_token&app_key=test_key"
+        get "/accounts/#{account.id.to_s}", {
+          token: gateway.token,
+          app_key: application.key,
+          session_id: session.token
+        }
       end
       it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
@@ -51,18 +56,21 @@ RSpec.shared_examples 'GET /:id' do
     describe '404 errors' do
       describe 'Account ID not found' do
         before do
-          get "/accounts/unexisting_id?token=test_token&app_key=test_key"
+          get '/accounts/unexisting_id', {
+            token: gateway.token,
+            app_key: application.key,
+            session_id: session.token
+          }
         end
         it 'Raises a 404 error' do
           expect(last_response.status).to be 404
         end
         it 'Returns the correct body' do
-          expect(JSON.parse(last_response.body)).to eq({
-            'status' => 404,
-            'field' => 'account_id',
-            'error' => 'unknown',
-            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Accounts-API#account-id-not-found'
-          })
+          expect(last_response.body).to include_json(
+            status: 404,
+            field: 'account_id',
+            error: 'unknown'
+          )
         end
       end
     end
