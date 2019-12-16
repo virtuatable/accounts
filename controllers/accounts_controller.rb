@@ -28,13 +28,16 @@ module Controllers
     api_route 'put', '/:id' do
       account = account_from_url
       if params.key? 'groups'
-        unknown_groups_exist = params['groups'].any? do |group_id|
-          Arkaan::Permissions::Group.where(id: group_id).first.nil?
-        end
-        api_not_found 'group_id.unknown' if unknown_groups_exist
+        api_not_found 'group_id.unknown' if unknown_groups?
         account.group_ids = params['groups']
         account.save!
         api_item account
+      end
+    end
+
+    def unknown_groups?
+      params['groups'].any? do |group_id|
+        Arkaan::Permissions::Group.find(group_id).nil?
       end
     end
 
