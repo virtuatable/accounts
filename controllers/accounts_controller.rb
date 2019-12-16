@@ -4,11 +4,9 @@ module Controllers
   # Main controller of the application, creating and destroying sessions.
   # @author Vincent Courtois <courtois.vincent@outlook.com>
   class Accounts < Virtuatable::Controllers::Base
-
     api_route 'post', '/', options: { authenticated: false, premium: true } do
       check_presence('username', 'password', 'password_confirmation', 'email')
       account = service.create(account_parameters)
-      account.save!
       api_created account
     end
 
@@ -17,12 +15,7 @@ module Controllers
     end
 
     api_route 'get', '/:id' do
-      account = Arkaan::Account.find(params[:id])
-      if account.nil?
-        api_not_found('account_id.unknown')
-      else
-        api_item account
-      end
+      api_item account_from_url
     end
 
     api_route 'put', '/own' do
@@ -33,7 +26,7 @@ module Controllers
     end
 
     api_route 'put', '/:id' do
-      account = get_account
+      account = account_from_url
       if params.key? 'groups'
         unknown_groups_exist = params['groups'].any? do |group_id|
           Arkaan::Permissions::Group.where(id: group_id).first.nil?
@@ -60,7 +53,7 @@ module Controllers
       )
     end
 
-    def get_account
+    def account_from_url
       account = Arkaan::Account.find(params[:id])
       api_not_found 'account_id.unknown' if account.nil?
       account

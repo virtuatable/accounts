@@ -9,6 +9,7 @@ module Services
     def create(parameters)
       account = Arkaan::Account.new(parameters)
       account.groups = Arkaan::Permissions::Group.where(is_default: true)
+      account.save!
       account
     end
   end
