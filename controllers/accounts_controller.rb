@@ -7,24 +7,21 @@ module Controllers
 
     api_route 'post', '/', options: { authenticated: false, premium: true } do
       check_presence('username', 'password', 'password_confirmation', 'email')
-      account = Services::Accounts.instance.create(account_parameters)
+      account = service.create(account_parameters)
       account.save!
-      api_created({
-        message: 'created',
-        item: account.enhance!.to_h
-      })
+      api_created account
     end
 
     api_route 'get', '/own' do
-      halt 200, { account: account.enhance!.to_h }.to_json
+      api_item account
     end
 
     api_route 'get', '/:id' do
-      updated = Arkaan::Account.where(id: params[:id]).first
-      if updated.nil?
+      account = Arkaan::Account.find(params[:id])
+      if account.nil?
         api_not_found('account_id.unknown')
       else
-        api_item({ account: updated.enhance!.to_h })
+        api_item account
       end
     end
 
@@ -32,25 +29,19 @@ module Controllers
       check_presence('password_confirmation') if params.key?('password')
       account.update_attributes(account_parameters)
       account.save!
-      api_item({
-        message: 'updated',
-        item: account.enhance!.to_h
-      })
+      api_item account
     end
 
     api_route 'put', '/:id' do
-      updated = get_account
+      account = get_account
       if params.key? 'groups'
         unknown_groups_exist = params['groups'].any? do |group_id|
           Arkaan::Permissions::Group.where(id: group_id).first.nil?
         end
         api_not_found 'group_id.unknown' if unknown_groups_exist
-        updated.group_ids = params['groups']
-        updated.save!
-        api_item({
-          message: 'updated',
-          item: updated.enhance!.to_h
-        })
+        account.group_ids = params['groups']
+        account.save!
+        api_item account
       end
     end
 
@@ -70,13 +61,17 @@ module Controllers
     end
 
     def get_account
-      account = Arkaan::Account.where(id: params['id']).first
+      account = Arkaan::Account.find(params[:id])
       api_not_found 'account_id.unknown' if account.nil?
       account
     end
 
     def select_params(*fields)
       params.select { |key| fields.include?(key) }
+    end
+
+    def service
+      Services::Accounts.instance
     end
   end
 end

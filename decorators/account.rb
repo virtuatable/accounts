@@ -20,13 +20,7 @@ module Decorators
     end
 
     def rights
-      raw_rights.flatten
-    end
-
-    def raw_rights
-      object.groups.map do |group|
-        Decorators::Right.decorate_collection(group.rights).map(&:to_h)
-      end
+      groups.map(&:rights).flatten.map(&:to_h)
     end
   end
 end

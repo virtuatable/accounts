@@ -6,7 +6,7 @@ group :development, :production, :test do
   gem 'arkaan' , '2.0.0'
 
   gem 'require_all'       , '3.0.0'
-  gem 'virtuatable'       , path: '../virtuatable'
+  gem 'virtuatable'       , '1.2.3'
   gem 'capistrano'        , '3.11.0'
   gem 'capistrano-bundler', '1.5.0'
   gem 'capistrano-rvm'    , '0.1.1'
@@ -22,7 +22,7 @@ group :development, :test do
   gem 'rack-test'              , '0.7.0' , require: 'rack/test'
   gem 'rspec'                  , '3.6.0'
   gem 'rspec-json_expectations', '2.1.0'
-  gem 'factory_girl'           , '4.8.1'
+  gem 'factory_bot'            , '5.1.1'
   gem 'simplecov'              , '0.15.1'
   gem 'database_cleaner'       , '1.6.1'
   gem 'bcrypt'                 , '3.1.11'

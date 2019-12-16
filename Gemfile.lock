@@ -1,15 +1,3 @@
-PATH
-  remote: ../virtuatable
-  specs:
-    virtuatable (1.2.1)
-      activesupport (= 5.2.3)
-      arkaan (>= 2.0.0)
-      dotenv (= 2.7.2)
-      mongoid (= 7.0.1)
-      require_all (= 3.0.0)
-      sinatra (= 2.0.5)
-      sinatra-contrib (= 2.0.5)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -82,8 +70,8 @@ GEM
     erubi (1.9.0)
     erubis (2.7.0)
     excon (0.70.0)
-    factory_girl (4.8.1)
-      activesupport (>= 3.0.0)
+    factory_bot (5.1.1)
+      activesupport (>= 4.2.0)
     faraday (0.15.2)
       multipart-post (>= 1.2, < 3)
     heroics (0.0.25)
@@ -186,6 +174,14 @@ GEM
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.0)
+    virtuatable (1.2.3)
+      activesupport (= 5.2.3)
+      arkaan (>= 2.0.0)
+      dotenv (= 2.7.2)
+      mongoid (= 7.0.1)
+      require_all (= 3.0.0)
+      sinatra (= 2.0.5)
+      sinatra-contrib (= 2.0.5)
     yard (0.9.20)
 
 PLATFORMS
@@ -199,7 +195,7 @@ DEPENDENCIES
   capistrano-rvm (= 0.1.1)
   database_cleaner (= 1.6.1)
   dotenv (= 2.7.2)
-  factory_girl (= 4.8.1)
+  factory_bot (= 5.1.1)
   mongoid (= 7.0.1)
   pry (= 0.11.1)
   rack-test (= 0.7.0)
@@ -210,7 +206,7 @@ DEPENDENCIES
   rubocop (= 0.71.0)
   simplecov (= 0.15.1)
   sinatra (= 2.0.5)
-  virtuatable!
+  virtuatable (= 1.2.3)
   yard (= 0.9.20)
 
 BUNDLED WITH

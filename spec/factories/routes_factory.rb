@@ -1,8 +1,8 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :empty_route, class: Arkaan::Monitoring::Route do
     factory :route do
-      path '/route'
-      verb 'post'
+      path { '/route' }
+      verb { 'post' }
     end
   end
 end

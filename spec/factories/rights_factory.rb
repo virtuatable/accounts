@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :empty_right, class: Arkaan::Permissions::Right do
     factory :right do
-      slug 'test_right'
+      slug { 'test_right' }
     end
   end
 end

@@ -3,8 +3,8 @@
 module Decorators
   # Represents a right the user has on the frontend side (not a route access).
   # @author Vincent Courtois <courtois.vincent@outlook.com>
-  class Right < Draper::Decorator
-    delegate_all
+  class Right < Virtuatable::Enhancers::Base
+    enhances Arkaan::Permissions::Right
 
     def to_h
       {

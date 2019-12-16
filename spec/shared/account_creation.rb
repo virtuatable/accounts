@@ -13,25 +13,22 @@ RSpec.shared_examples 'POST /' do
           lastname: 'Courtois',
           language: 'en_GB',
           gender: 'male'
-        }.to_json
+        }
       end
       it 'Returns a Created (201) status' do
         expect(last_response.status).to be 201
       end
       it 'Creates an account' do
-        expect(last_response.body).to include_json({
-          message: 'created',
-          item: {
-            id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
-            username: 'Babausse',
-            email: 'test@test.com',
-            firstname: 'Vincent',
-            lastname: 'Courtois',
-            language: 'en_GB',
-            gender: 'male',
-            rights: []
-          }
-        })
+        expect(last_response.body).to include_json(
+          id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
+          username: 'Babausse',
+          email: 'test@test.com',
+          firstname: 'Vincent',
+          lastname: 'Courtois',
+          language: 'en_GB',
+          gender: 'male',
+          rights: []
+        )
       end
       describe 'Created account fields' do
         let(:created_account) { Arkaan::Account.where(username: 'Babausse').first }
@@ -78,25 +75,22 @@ RSpec.shared_examples 'POST /' do
             lastname: 'Courtois',
             language: 'en_GB',
             gender: 'male'
-          }.to_json
+          }
         end
         it 'Returns a 201 (Created) status' do
           expect(last_response.status).to be 201
         end
         it 'returns the correct body' do
-          expect(last_response.body).to include_json({
-            message: 'created',
-            item: {
-              id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
-              username: 'Babausse',
-              email: 'test@test.com',
-              firstname: 'Vincent',
-              lastname: 'Courtois',
-              language: 'en_GB',
-              gender: 'male',
-              rights: [{id: right.id.to_s, slug: 'test_category.test_right'}]
-            }
-          })
+          expect(last_response.body).to include_json(
+            id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
+            username: 'Babausse',
+            email: 'test@test.com',
+            firstname: 'Vincent',
+            lastname: 'Courtois',
+            language: 'en_GB',
+            gender: 'male',
+            rights: [{id: right.id.to_s, slug: 'test_category.test_right'}]
+          )
         end
         it 'Has given groups to the created account' do
           expect(Arkaan::Account.where(username: 'Babausse').first.groups.first.slug).to eq 'test_group'
@@ -114,25 +108,22 @@ RSpec.shared_examples 'POST /' do
             email: 'test@test.com',
             firstname: 'Vincent',
             lastname: 'Courtois',
-          }.to_json
+          }
         end
         it 'Returns a Created (201) status' do
           expect(last_response.status).to be 201
         end
         it 'Creates an account' do
-          expect(last_response.body).to include_json({
-            message: 'created',
-            item: {
-              id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
-              username: 'Babausse',
-              email: 'test@test.com',
-              firstname: 'Vincent',
-              lastname: 'Courtois',
-              language: 'fr_FR',
-              gender: 'neutral',
-              rights: []
-            }
-          })
+          expect(last_response.body).to include_json(
+            id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
+            username: 'Babausse',
+            email: 'test@test.com',
+            firstname: 'Vincent',
+            lastname: 'Courtois',
+            language: 'fr_FR',
+            gender: 'neutral',
+            rights: []
+          )
         end
         describe 'account attributes' do
           let(:created_account) { Arkaan::Account.where(username: 'Babausse').first }
@@ -159,25 +150,22 @@ RSpec.shared_examples 'POST /' do
             lastname: 'Courtois',
             language: 'martian',
             gender: 'shark'
-          }.to_json
+          }
         end
         it 'Returns a Created (201) status' do
           expect(last_response.status).to be 201
         end
         it 'Creates an account' do
-          expect(last_response.body).to include_json({
-            message: 'created',
-            item: {
-              id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
-              username: 'Babausse',
-              email: 'test@test.com',
-              firstname: 'Vincent',
-              lastname: 'Courtois',
-              language: 'fr_FR',
-              gender: 'neutral',
-              rights: []
-            }
-          })
+          expect(last_response.body).to include_json(
+            id: Arkaan::Account.where(username: 'Babausse').first.id.to_s,
+            username: 'Babausse',
+            email: 'test@test.com',
+            firstname: 'Vincent',
+            lastname: 'Courtois',
+            language: 'fr_FR',
+            gender: 'neutral',
+            rights: []
+          )
         end
         describe 'account attributes' do
           let(:created_account) { Arkaan::Account.where(username: 'Babausse').first }

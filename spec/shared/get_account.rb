@@ -21,33 +21,17 @@ RSpec.shared_examples 'GET /:id' do
       it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
       end
-      describe 'Account attributes' do
-        let!(:parsed_account) { JSON.parse(last_response.body)['account'] }
-
-        it 'Has an ID' do
-          expect(parsed_account['id']).to eq account.id.to_s
-        end
-        it 'Has a username' do
-          expect(parsed_account['username']).to eq(account.username)
-        end
-        it 'Has an email' do
-          expect(parsed_account['email']).to eq(account.email)
-        end
-        it 'Has a firstname' do
-          expect(parsed_account['firstname']).to eq(account.firstname)
-        end
-        it 'Has a lastname' do
-          expect(parsed_account['lastname']).to eq(account.lastname)
-        end
-        it 'Has a language' do
-          expect(parsed_account['language']).to eq(account.language.to_s)
-        end
-        it 'Has a preferred gender' do
-          expect(parsed_account['gender']).to eq(account.gender.to_s)
-        end
-        it 'Returns an account with the correct rights' do
-          expect(parsed_account['rights']).to eq([{'id' => right.id.to_s, 'slug' => 'test_category.test_right'}])
-        end
+      it 'Returns the correct body' do
+        expect(last_response.body).to include_json(
+          id: account.id.to_s,
+          username: account.username,
+          email: account.email,
+          firstname: account.firstname,
+          lastname: account.lastname,
+          language: account.language.to_s,
+          gender: account.gender.to_s,
+          rights: [{slug: 'test_category.test_right'}]
+        )
       end
     end
 

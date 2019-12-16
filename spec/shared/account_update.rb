@@ -2,21 +2,23 @@ RSpec.shared_examples 'PUT /:id' do
   describe 'PUT /accounts/:id' do
     let!(:session) { create(:session, account: account) }
     let!(:group) { create(:group) }
-    let!(:other_account) { create(:account, id: 'other_account_id', username: 'Other user', email: 'otheruser@mail.com') }
+    let!(:other_account) { create(:other_account) }
 
     describe 'Nominal case' do
       before do
-        put "/accounts/#{other_account.id}", {session_id: session.token, token: 'test_token', app_key: 'test_key', groups: [group.id.to_s]}
+        put "/accounts/#{other_account.id}", {
+          session_id: session.token,
+          token: 'test_token',
+          app_key: 'test_key',
+          groups: [group.id.to_s]
+        }
       end
       it 'Returns a OK (200) status code' do
         expect(last_response.status).to be 200
       end
       it 'Returns the correct body' do
         expect(last_response.body).to include_json(
-          message: 'updated',
-          item: {
-            id: other_account.id.to_s
-          }
+          id: other_account.id.to_s
         )
       end
     end
