@@ -14,6 +14,7 @@ namespace :deploy do
         execute :pwd
         execute :ls, '-la'
         execute :ls, '-la config'
+        execute :cat, '/var/www/accounts/shared/config/mongoid.yml'
         execute :bundle, "exec rackup -p #{fetch(:app_port)} --env production -o 0.0.0.0 -P #{pid_file} --daemonize"
       end
     end
