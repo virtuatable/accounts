@@ -6,7 +6,7 @@ group :development, :production, :test do
   gem 'arkaan' , '2.0.0'
 
   gem 'require_all'       , '3.0.0'
-  gem 'virtuatable'       , '1.3.0'
+  gem 'virtuatable'       , '1.5.0'
   gem 'capistrano'        , '3.11.0'
   gem 'capistrano-bundler', '1.5.0'
   gem 'capistrano-rvm'    , '0.1.1'
