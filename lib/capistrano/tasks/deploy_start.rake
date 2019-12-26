@@ -11,8 +11,8 @@ namespace :deploy do
         else
           puts "Le fichier du PID n'a pas été trouvé et ne peux pas être supprimé."
         end
-        execute "cd #{current_path}"
         execute :pwd
+        execute :ls, '-la'
         execute :bundle, "exec rackup -p #{fetch(:app_port)} --env production -o 0.0.0.0 -P #{pid_file} --daemonize"
       end
     end
