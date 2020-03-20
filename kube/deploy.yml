@@ -1,4 +1,4 @@
-apiversion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: accounts-deployment
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: accounts
-        image: virtuatable-accounts:latest
+        image: virtuatable/accounts:latest
         env:
           - name: MONGODB_URL
             valueFrom:
