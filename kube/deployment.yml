@@ -18,16 +18,16 @@ spec:
       - name: accounts
         image: virtuatable/accounts:latest
         env:
-          - name: MONGODB_URL
-            valueFrom:
-              secretKeyRef:
-                name: mongodb-uris
-                key: accounts
-          - name: SERVICE_URL
-            value: http://localhost:8080/
-          - name: PORT
-            value: 8080
-          - name: RACK_ENV
-            value: production
+        - name: MONGODB_URL
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-uris
+              key: accounts
+        - name: SERVICE_URL
+          value: "http://localhost:8080/"
+        - name: PORT
+          value: "8080"
+        - name: RACK_ENV
+          value: production
         ports:
-          - containerPort: 8080
+        - containerPort: 8080
