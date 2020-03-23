@@ -7,7 +7,6 @@ RSpec.shared_examples 'GET /own' do
       before do
         get '/accounts/own', {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key'
         }
       end
@@ -31,7 +30,6 @@ RSpec.shared_examples 'GET /own' do
       describe 'session ID not given' do
         before do
           get '/accounts/own', {
-            token: 'test_token',
             app_key: 'test_key'
           }
         end
@@ -53,7 +51,6 @@ RSpec.shared_examples 'GET /own' do
         before do
           get '/accounts/own', {
             session_id: 'unknown_token',
-            token: 'test_token',
             app_key: 'test_key'
           }
         end

@@ -5,7 +5,10 @@ RSpec.shared_examples 'PUT /own' do
 
     describe 'Nothing being updated' do
       before do
-        put '/accounts/own', {session_id: session.token, token: 'test_token', app_key: 'test_key'}
+        put '/accounts/own', {
+          session_id: session.token,
+          app_key: 'test_key'
+        }
       end
       it 'Returns a OK (200) status' do
         expect(last_response.status).to be 200
@@ -52,7 +55,6 @@ RSpec.shared_examples 'PUT /own' do
       before do
         put '/accounts/own', {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key',
           username: 'Compte de test'
         }
@@ -80,7 +82,6 @@ RSpec.shared_examples 'PUT /own' do
       before do
         put '/accounts/own', {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key',
           password: 'new_password',
           password_confirmation: 'new_password'
@@ -109,7 +110,6 @@ RSpec.shared_examples 'PUT /own' do
       before do
         put '/accounts/own', {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key',
           email: 'test@mail.com'
         }
@@ -137,7 +137,6 @@ RSpec.shared_examples 'PUT /own' do
       before do
         put '/accounts/own', {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key',
           firstname: 'Babausse'
         }
@@ -165,7 +164,6 @@ RSpec.shared_examples 'PUT /own' do
       before do
         put '/accounts/own', {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key',
           lastname: 'Babausse'
         }
@@ -193,7 +191,6 @@ RSpec.shared_examples 'PUT /own' do
       before do
         put '/accounts/own', {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key',
           language: 'en_GB'
         }
@@ -221,7 +218,6 @@ RSpec.shared_examples 'PUT /own' do
       before do
         put '/accounts/own', {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key',
           gender: 'male'
         }
@@ -251,7 +247,9 @@ RSpec.shared_examples 'PUT /own' do
     describe '400 errors' do
       describe 'session ID not given' do
         before do
-          put '/accounts/own', {token: 'test_token', app_key: 'test_key'}
+          put '/accounts/own', {
+            app_key: 'test_key'
+          }
         end
         it 'Raises a Bad Request (400) status' do
           expect(last_response.status).to be 400
@@ -268,7 +266,6 @@ RSpec.shared_examples 'PUT /own' do
       describe 'password confirmation not given' do
         before do
           put '/accounts/own', {
-            token: 'test_token',
             app_key: 'test_key',
             session_id: session.token,
             password: 'new_password'
@@ -290,7 +287,6 @@ RSpec.shared_examples 'PUT /own' do
         before do
           put '/accounts/own', {
             session_id: session.token,
-            token: 'test_token',
             app_key: 'test_key',
             username: 'test'
           }
@@ -312,7 +308,6 @@ RSpec.shared_examples 'PUT /own' do
         before do
           put '/accounts/own', {
             session_id: session.token,
-            token: 'test_token',
             app_key: 'test_key',
             username: second_account.username
           }
@@ -333,7 +328,6 @@ RSpec.shared_examples 'PUT /own' do
         before do
           put '/accounts/own', {
             session_id: session.token,
-            token: 'test_token',
             app_key: 'test_key',
             password: 'new_password',
             password_confirmation: 'another_new_password'
@@ -356,7 +350,6 @@ RSpec.shared_examples 'PUT /own' do
         before do
           put '/accounts/own', {
             session_id: session.token,
-            token: 'test_token',
             app_key: 'test_key',
             email: second_account.email
           }

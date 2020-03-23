@@ -3,7 +3,6 @@ RSpec.shared_examples 'POST /' do
     describe 'Nominal case' do
       before do
         post '/accounts', {
-          token: 'test_token',
           app_key: 'test_key',
           username: 'Babausse',
           password: 'password',
@@ -65,7 +64,6 @@ RSpec.shared_examples 'POST /' do
 
         before do
           post '/accounts', {
-            token: 'test_token',
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -100,7 +98,6 @@ RSpec.shared_examples 'POST /' do
       describe 'when the language or the gender are not given' do
         before do
           post '/accounts', {
-            token: 'test_token',
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -140,7 +137,6 @@ RSpec.shared_examples 'POST /' do
       describe 'when the language or the gender are not in the available list' do
         before do
           post '/accounts', {
-            token: 'test_token',
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -185,7 +181,12 @@ RSpec.shared_examples 'POST /' do
     describe '400 errors' do
       describe 'Username not given' do
         before do
-          post '/accounts', {token: 'test_token', app_key: 'test_key', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            password: 'password',
+            password_confirmation: 'password',
+            email: 'test@test.com'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -201,7 +202,12 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Password not given' do
         before do
-          post '/accounts', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password_confirmation: 'password', email: 'test@test.com'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            username: 'Babausse',
+            password_confirmation: 'password',
+            email: 'test@test.com'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -217,7 +223,12 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Password confirmation not given' do
         before do
-          post '/accounts', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', email: 'test@test.com'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            username: 'Babausse',
+            password: 'password',
+            email: 'test@test.com'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -233,7 +244,12 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Email not given' do
         before do
-          post '/accounts', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            username: 'Babausse',
+            password: 'password',
+            password_confirmation: 'password'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -250,7 +266,13 @@ RSpec.shared_examples 'POST /' do
       describe 'Username already taken' do
         before do
           create(:other_account, username: 'Babausse', email: 'another@test.com')
-          post '/accounts', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            username: 'Babausse',
+            password: 'password',
+            password_confirmation: 'password',
+            email: 'test@test.com'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -266,7 +288,13 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Username too short' do
         before do
-          post '/accounts', {token: 'test_token', app_key: 'test_key', username: 'test', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            username: 'test',
+            password: 'password',
+            password_confirmation: 'password',
+            email: 'test@test.com'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -283,7 +311,13 @@ RSpec.shared_examples 'POST /' do
       describe 'Email already taken' do
         before do
           create(:other_account, username: 'Another random username', email: 'test@test.com')
-          post '/accounts', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            username: 'Babausse',
+            password: 'password',
+            password_confirmation: 'password',
+            email: 'test@test.com'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -299,7 +333,13 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Email with a bad format' do
         before do
-          post '/accounts', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            username: 'Babausse',
+            password: 'password',
+            password_confirmation: 'password',
+            email: 'test'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -315,7 +355,13 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Password confirmation not matching' do
         before do
-          post '/accounts', {token: 'test_token', app_key: 'test_key', username: 'Babausse', password: 'password', password_confirmation: 'another password', email: 'test@test.com'}.to_json
+          post '/accounts', {
+            app_key: 'test_key',
+            username: 'Babausse',
+            password: 'password',
+            password_confirmation: 'another password',
+            email: 'test@test.com'
+          }
         end
         it 'Raises a 400 error' do
           expect(last_response.status).to be 400
@@ -333,7 +379,13 @@ RSpec.shared_examples 'POST /' do
     describe '403 errors' do
       describe 'Application not premium' do
         before do
-          post '/accounts', {token: 'test_token', app_key: 'other_key', username: 'Babausse', password: 'password', password_confirmation: 'password', email: 'test@test.com'}.to_json
+          post '/accounts', {
+            app_key: 'other_key',
+            username: 'Babausse',
+            password: 'password',
+            password_confirmation: 'password',
+            email: 'test@test.com'
+          }
         end
         it 'Raises a 403 error' do
           expect(last_response.status).to be 403

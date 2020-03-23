@@ -8,7 +8,6 @@ RSpec.shared_examples 'PUT /:id' do
       before do
         put "/accounts/#{other_account.id}", {
           session_id: session.token,
-          token: 'test_token',
           app_key: 'test_key',
           groups: [group.id.to_s]
         }
@@ -27,7 +26,11 @@ RSpec.shared_examples 'PUT /:id' do
       describe 'Not found errors' do
         describe 'When the account is not found' do
           before do
-            put "/accounts/fake_id", {session_id: session.token, token: 'test_token', app_key: 'test_key', groups: [group.id.to_s]}
+            put "/accounts/fake_id", {
+              session_id: session.token,
+              app_key: 'test_key',
+              groups: [group.id.to_s]
+            }
           end
           it 'Returns a Not Found (404) error code' do
             expect(last_response.status).to be 404
@@ -42,7 +45,11 @@ RSpec.shared_examples 'PUT /:id' do
         end
         describe 'When any of the groups is not found' do
           before do
-            put "/accounts/#{other_account.id}", {session_id: session.token, token: 'test_token', app_key: 'test_key', groups: ['fake_id']}
+            put "/accounts/#{other_account.id}", {
+              session_id: session.token,
+              app_key: 'test_key',
+              groups: ['fake_id']
+            }
           end
           it 'Returns a Not Found (404) error code' do
             expect(last_response.status).to be 404

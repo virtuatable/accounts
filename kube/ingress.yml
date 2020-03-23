@@ -4,9 +4,10 @@ metadata:
   name: accounts-virtual-host-ingress
 spec:
   rules:
-  - http:
+  - host: www.virtuatable.io
+    http:
       paths:
-      - path: /accounts
+      - path: /
         backend:
           serviceName: accounts-service
           servicePort: 8080

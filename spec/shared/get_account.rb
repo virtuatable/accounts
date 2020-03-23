@@ -13,7 +13,6 @@ RSpec.shared_examples 'GET /:id' do
     describe 'Nominal case' do
       before do
         get "/accounts/#{account.id.to_s}", {
-          token: gateway.token,
           app_key: application.key,
           session_id: session.token
         }
@@ -41,7 +40,6 @@ RSpec.shared_examples 'GET /:id' do
       describe 'Account ID not found' do
         before do
           get '/accounts/unexisting_id', {
-            token: gateway.token,
             app_key: application.key,
             session_id: session.token
           }

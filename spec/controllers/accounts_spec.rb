@@ -5,7 +5,6 @@ RSpec.describe Controllers::Accounts do
   end
 
   let!(:account) { create(:account) }
-  let!(:gateway) { create(:gateway) }
   let!(:premium_application) { create(:premium_application, creator: account) }
   let!(:application) { create(:application, creator: account) }
 
