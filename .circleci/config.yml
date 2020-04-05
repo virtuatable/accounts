@@ -18,7 +18,7 @@ jobs:
       - vcom/generate-documentation
   rubocop-job:
     docker:
-      - image: circleci/ruby-2.6.5-node-browsers
+      - image: circleci/ruby:2.6.5-node-browsers
     steps:
       - run: mkdir /tmp/accounts
       - run: |
