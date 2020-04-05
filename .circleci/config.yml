@@ -21,7 +21,8 @@ jobs:
     steps:
       - vcom/perform-rubocop-analysis
   build-job:
-    executor: circleci/ruby-2.6.5-node-browsers
+    docker:
+      - image: circleci/ruby-2.6.5-node-browsers
     steps:
       - checkout
       - setup_remote_docker
@@ -32,7 +33,8 @@ jobs:
       - run: |
           virtuatable docker create accounts
   deploy-job:
-    executor: circleci/ruby-2.6.5-node-browsers
+    docker:
+      - image: circleci/ruby-2.6.5-node-browsers
     steps:
       - kube/install-kubectl
       - kube/install-kubeconfig:
