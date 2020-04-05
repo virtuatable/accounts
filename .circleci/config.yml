@@ -23,6 +23,8 @@ jobs:
       - checkout
       - run: mkdir /tmp/accounts
       - run: |
+          gem install bundler:2.1.4
+      - run: |
           bundle update --bundler
       - run: |
           bundle install
