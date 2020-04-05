@@ -28,9 +28,9 @@ jobs:
           mkdir -p /tmp/test-results/rspec
       - setup_ruby
       - run: |
-          bundle exec rspec |
-          --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml
-          --format html --out /tmp/html-results/results.html
+          bundle exec rspec \
+          --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml \
+          --format html --out /tmp/html-results/results.html \
           --format progress controllers/ decorators/ services/
       - store_test_results:
           path: /tmp/test-results/rspec
