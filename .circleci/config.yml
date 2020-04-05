@@ -20,9 +20,11 @@ jobs:
     docker:
       - image: circleci/ruby:2.6.5-node-browsers
     steps:
+      - checkout
       - run: mkdir /tmp/accounts
       - run: |
-          bundle update --bundler |
+          bundle update --bundler
+      - run: |
           bundle install
       - run: |
           bundle exec rubocop -F -f h -o /tmp/accounts/results.html controllers/ decorators/ services/
