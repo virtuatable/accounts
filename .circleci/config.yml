@@ -5,29 +5,59 @@ orbs:
   vcom: virtuaorbs/commands@0.3.0
   kube: circleci/kubernetes@0.11.0
 
-jobs:
-  test-job:
-    executor: vexe/mongoruby_2-6-3
-    steps:
-      - vcom/run-test-suites:
-          filename: 'tests'
-          suite: 'spec/controllers/accounts_spec.rb'
-  doc-job:
-    executor: vexe/mongoruby_2-6-3
-    steps:
-      - vcom/generate-documentation
-  rubocop-job:
-    docker:
-      - image: circleci/ruby:2.6.5-node-browsers
+commands:
+  setup_ruby:
     steps:
       - checkout
-      - run: mkdir /tmp/accounts
       - run: |
           gem install bundler:2.1.4
       - run: |
           bundle update --bundler
       - run: |
           bundle install
+
+jobs:
+  test-job:
+    docker:
+      - image: circleci/ruby:2.6.5-node-browsers
+      - image: mongo:4.1.4-xenial
+    steps:
+      - run: |
+          mkdir /tmp/test-results
+      - run: |
+          mkdir -p /tmp/test-results/rspec
+      - setup_ruby
+      - run: |
+          bundle exec rspec |
+          --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml
+          --format html --out /tmp/html-results/results.html
+          --format progress controllers/ decorators/ services/
+      - store_test_results:
+          path: /tmp/test-results/rspec
+      - store_artifacts:
+          path: /tmp/html-results
+          destination: results
+  doc-job:
+    docker:
+      - image: circleci/ruby:2.6.5-node-browsers
+    steps:
+      - run: |
+          mkdir /tmp/accounts
+      - setup_ruby
+      - run: |
+          bundle exec yard doc -o /tmp/accounts controllers/ decorators/ services/
+      - store_test_results:
+          path: /tmp/accounts
+      - store_artifacts:
+          path: /tmp/accounts
+          destination: accounts
+  rubocop-job:
+    docker:
+      - image: circleci/ruby:2.6.5-node-browsers
+    steps:
+      - run: |
+          mkdir /tmp/accounts
+      - setup_ruby
       - run: |
           bundle exec rubocop -F -f h -o /tmp/accounts/results.html controllers/ decorators/ services/
       - store_test_results:
@@ -58,12 +88,6 @@ jobs:
           gem install virtuatable:2.3.0
       - run: |
           virtuatable kube create accounts
-
-  restart-job:
-    executor: vexe/mongoruby_2-6-3
-    steps:
-      - vcom/perform-capistrano-command:
-          command: "deploy:start"
 
 workflows:
   version: 2.1
