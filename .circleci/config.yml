@@ -1,34 +1,51 @@
 version: 2.1
 
 orbs:
-  virtuaexecutors: virtuaorbs/executors@0.1.0
-  virtuacommands: virtuaorbs/commands@0.3.0
+  vexe: virtuaorbs/executors@0.1.0
+  vcom: virtuaorbs/commands@0.3.0
+  kube: circleci/kubernetes@0.11.0
 
 jobs:
   test-job:
-    executor: virtuaexecutors/mongoruby_2-6-3
+    executor: vexe/mongoruby_2-6-3
     steps:
-      - virtuacommands/run-test-suites:
+      - vcom/run-test-suites:
           filename: 'tests'
           suite: 'spec/controllers/accounts_spec.rb'
   doc-job:
-    executor: virtuaexecutors/mongoruby_2-6-3
+    executor: vexe/mongoruby_2-6-3
     steps:
-      - virtuacommands/generate-documentation
+      - vcom/generate-documentation
   rubocop-job:
-    executor: virtuaexecutors/mongoruby_2-6-3
+    executor: vexe/mongoruby_2-6-3
     steps:
-      - virtuacommands/perform-rubocop-analysis
+      - vcom/perform-rubocop-analysis
+  build-job:
+    executor: circleci/ruby-2.6.5-node-browsers
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          echo $DOCKER_PWD | docker login --username $DOCKER_USER --password-stdin
+      - run: |
+          gem install virtuatable:2.3.0
+      - run: |
+          virtuatable docker create accounts
   deploy-job:
-    executor: virtuaexecutors/mongoruby_2-6-3
+    executor: circleci/ruby-2.6.5-node-browsers
     steps:
-      - virtuacommands/perform-capistrano-command:
-          command: "deploy"
+      - kube/install-kubectl
+      - kube/install-kubeconfig:
+          kubeconfig: KUBECONFIG
+      - run: |
+          gem install virtuatable:2.3.0
+      - run: |
+          virtuatable kube create accounts
 
   restart-job:
-    executor: virtuaexecutors/mongoruby_2-6-3
+    executor: vexe/mongoruby_2-6-3
     steps:
-      - virtuacommands/perform-capistrano-command:
+      - vcom/perform-capistrano-command:
           command: "deploy:start"
 
 workflows:
@@ -42,19 +59,15 @@ workflows:
       - doc-job:
           requires:
             - rubocop-job
-      - deploy-job:
+      - build-job:
           requires:
             - test-job
           filters:
             branches:
               only: master
-  daily-restart:
-    triggers:
-      - schedule:
-          cron: "5 6 * * *"
+      - deploy-job:
+          requires:
+            - build-job
           filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - restart-job
+            breanches:
+              only: master
