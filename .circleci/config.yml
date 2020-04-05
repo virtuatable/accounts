@@ -80,8 +80,12 @@ jobs:
       - image: circleci/ruby:2.6.5-node-browsers
     steps:
       - kube/install-kubectl
-      - kube/install-kubeconfig:
-          kubeconfig: KUBECONFIG
+      - run: |
+          mkdir $HOME/.kube
+      - run: |
+          echo -n "${KUBECONFIG}"
+      - run: |
+          echo -n "${KUBECONFIG}" | base64 --decode > $HOME/.kube/config
       - run: |
           gem install virtuatable:2.3.1
       - run: |
