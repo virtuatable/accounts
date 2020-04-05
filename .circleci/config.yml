@@ -1,8 +1,6 @@
 version: 2.1
 
 orbs:
-  vexe: virtuaorbs/executors@0.1.0
-  vcom: virtuaorbs/commands@0.3.0
   kube: circleci/kubernetes@0.11.0
 
 commands:
@@ -74,7 +72,7 @@ jobs:
       - run: |
           echo $DOCKER_PWD | docker login --username $DOCKER_USER --password-stdin
       - run: |
-          gem install virtuatable:2.3.0
+          gem install virtuatable:2.3.1
       - run: |
           virtuatable docker create accounts
   deploy-job:
@@ -85,7 +83,7 @@ jobs:
       - kube/install-kubeconfig:
           kubeconfig: KUBECONFIG
       - run: |
-          gem install virtuatable:2.3.0
+          gem install virtuatable:2.3.1
       - run: |
           virtuatable kube create accounts
 
