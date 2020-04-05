@@ -69,5 +69,5 @@ workflows:
           requires:
             - build-job
           filters:
-            breanches:
+            branches:
               only: master
