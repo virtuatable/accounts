@@ -31,7 +31,7 @@ jobs:
           bundle exec rspec \
           --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml \
           --format html --out /tmp/html-results/results.html \
-          --format progress controllers/ decorators/ services/
+          --format progress spec/
       - store_test_results:
           path: /tmp/test-results/rspec
       - store_artifacts:
@@ -67,7 +67,7 @@ jobs:
           destination: accounts
   build-job:
     docker:
-      - image: circleci/ruby-2.6.5-node-browsers
+      - image: circleci/ruby:2.6.5-node-browsers
     steps:
       - checkout
       - setup_remote_docker
@@ -79,7 +79,7 @@ jobs:
           virtuatable docker create accounts
   deploy-job:
     docker:
-      - image: circleci/ruby-2.6.5-node-browsers
+      - image: circleci/ruby:2.6.5-node-browsers
     steps:
       - kube/install-kubectl
       - kube/install-kubeconfig:
