@@ -83,9 +83,7 @@ jobs:
       - run: |
           mkdir $HOME/.kube
       - run: |
-          echo -n "${KUBECONFIG}"
-      - run: |
-          echo -n "${KUBECONFIG}" | base64 --decode > $HOME/.kube/config
+          echo -n "${KUBERNETES_CONFIG}" | base64 --decode > $HOME/.kube/config
       - run: |
           gem install virtuatable:2.3.1
       - run: |
