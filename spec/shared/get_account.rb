@@ -34,7 +34,7 @@ RSpec.shared_examples 'GET /:id' do
       end
     end
 
-    it_should_behave_like 'a route', 'get', '/accounts/account_id'
+    it_should_behave_like 'a route', 'get', '/accounts/account_id', {authenticated: true}
 
     describe '404 errors' do
       describe 'Account ID not found' do

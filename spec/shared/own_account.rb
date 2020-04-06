@@ -24,7 +24,7 @@ RSpec.shared_examples 'GET /own' do
       end
     end
 
-    it_should_behave_like 'a route', 'get', '/accounts/own'
+    it_should_behave_like 'a route', 'get', '/accounts/own', {authenticated: true}
 
     describe '400 errors' do
       describe 'session ID not given' do

@@ -242,7 +242,7 @@ RSpec.shared_examples 'PUT /own' do
       end
     end
 
-    it_should_behave_like 'a route', 'put', '/accounts/own'
+    it_should_behave_like 'a route', 'put', '/accounts/own', {authenticated: true}
 
     describe '400 errors' do
       describe 'session ID not given' do
