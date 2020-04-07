@@ -61,23 +61,19 @@ jobs:
       - store_artifacts:
           path: /tmp/accounts
           destination: accounts
-  build-job:
+  deploy-job:
     docker:
       - image: circleci/ruby:2.6.5-node-browsers
     steps:
       - checkout
       - setup_remote_docker
+      - kube/install-kubectl
       - run: |
           echo $DOCKER_PWD | docker login --username $DOCKER_USER --password-stdin
       - run: |
           gem install virtuatable
       - run: |
           virtuatable docker create accounts
-  deploy-job:
-    docker:
-      - image: circleci/ruby:2.6.5-node-browsers
-    steps:
-      - kube/install-kubectl
       - run: |
           mkdir $HOME/.kube
       - run: |
@@ -98,15 +94,9 @@ workflows:
       - doc-job:
           requires:
             - rubocop-job
-      - build-job:
-          requires:
-            - test-job
-          filters:
-            branches:
-              only: master
       - deploy-job:
           requires:
-            - build-job
+            - test-job
           filters:
             branches:
               only: master
