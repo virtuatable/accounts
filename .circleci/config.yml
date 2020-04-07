@@ -55,6 +55,8 @@ jobs:
           mkdir /tmp/accounts
       - setup_ruby
       - run: |
+          echo $(git rev-parse --abbrev-ref HEAD)
+      - run: |
           bundle exec rubocop -F -f h -o /tmp/accounts/results.html controllers/ decorators/ services/
       - store_test_results:
           path: /tmp/accounts
