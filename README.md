@@ -28,7 +28,7 @@ bundle
 
 ### Run the server
 
-To run the development server, use the command : `rackup`
+To run the development server, use the command : `rackup -p <port> --env development`
 
 ### Run tests suite
 
