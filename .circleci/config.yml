@@ -85,7 +85,7 @@ jobs:
       - run: |
           gem install virtuatable
       - run: |
-          virtuatable kube create accounts
+          virtuatable kube create accounts --retry=3
 
 workflows:
   version: 2.1
