@@ -10,7 +10,7 @@ group :development, :production, :test do
   gem 'capistrano'        , '3.11.0'
   gem 'capistrano-bundler', '1.5.0'
   gem 'capistrano-rvm'    , '0.1.1'
-  gem 'dotenv', '2.7.2'
+  gem 'dotenv'            , '2.7.2'
 end
 
 group :developement, :production do
