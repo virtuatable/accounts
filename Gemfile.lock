@@ -130,7 +130,7 @@ GEM
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.0)
-    virtuatable (2.4.0)
+    virtuatable (2.4.1)
       activesupport (= 5.2.3)
       arkaan (= 2.6.0)
       dotenv (= 2.7.2)
@@ -166,7 +166,7 @@ DEPENDENCIES
   rubocop (= 0.71.0)
   simplecov (= 0.15.1)
   sinatra (= 2.0.5)
-  virtuatable (= 2.4.0)
+  virtuatable (= 2.4.1)
   yard (= 0.9.20)
 
 BUNDLED WITH
