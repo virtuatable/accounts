@@ -120,7 +120,7 @@ workflows:
               only: master
       - tag-job:
           requires:
-            -  build-job:
+            - build-job
           filters:
             branches:
               only: master
