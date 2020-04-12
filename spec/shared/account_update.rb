@@ -1,12 +1,14 @@
 RSpec.shared_examples 'PUT /:id' do
-  describe 'PUT /accounts/:id' do
+  describe 'PUT /:id' do
     let!(:session) { create(:session, account: account) }
     let!(:group) { create(:group) }
     let!(:other_account) { create(:other_account) }
 
+    it_should_behave_like 'a route', 'put', '/:id', {authenticated: true}
+
     describe 'Nominal case' do
       before do
-        put "/accounts/#{other_account.id}", {
+        put "/#{other_account.id}", {
           session_id: session.token,
           app_key: 'test_key',
           groups: [group.id.to_s]
@@ -26,7 +28,7 @@ RSpec.shared_examples 'PUT /:id' do
       describe 'Not found errors' do
         describe 'When the account is not found' do
           before do
-            put "/accounts/fake_id", {
+            put "/fake_id", {
               session_id: session.token,
               app_key: 'test_key',
               groups: [group.id.to_s]
@@ -45,7 +47,7 @@ RSpec.shared_examples 'PUT /:id' do
         end
         describe 'When any of the groups is not found' do
           before do
-            put "/accounts/#{other_account.id}", {
+            put "/#{other_account.id}", {
               session_id: session.token,
               app_key: 'test_key',
               groups: ['fake_id']
@@ -64,7 +66,5 @@ RSpec.shared_examples 'PUT /:id' do
         end
       end
     end
-
-    it_should_behave_like 'a route', 'put', '/accounts/:id', {authenticated: true}
   end
 end

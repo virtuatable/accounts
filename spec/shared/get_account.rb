@@ -1,5 +1,5 @@
 RSpec.shared_examples 'GET /:id' do
-  describe 'GET /accounts/:id' do
+  describe 'GET /:id' do
     let!(:category) { create(:category) }
     let!(:right) { create(:right, category: category) }
     let!(:group) {
@@ -10,9 +10,11 @@ RSpec.shared_examples 'GET /:id' do
     }
     let!(:session) { create(:session, account: account) }
 
+    it_should_behave_like 'a route', 'get', '/account_id', {authenticated: true}
+
     describe 'Nominal case' do
       before do
-        get "/accounts/#{account.id.to_s}", {
+        get "/#{account.id.to_s}", {
           app_key: application.key,
           session_id: session.token
         }
@@ -34,12 +36,10 @@ RSpec.shared_examples 'GET /:id' do
       end
     end
 
-    it_should_behave_like 'a route', 'get', '/accounts/account_id', {authenticated: true}
-
     describe '404 errors' do
       describe 'Account ID not found' do
         before do
-          get '/accounts/unexisting_id', {
+          get '/unexisting_id', {
             app_key: application.key,
             session_id: session.token
           }

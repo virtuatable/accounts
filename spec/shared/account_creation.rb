@@ -1,8 +1,11 @@
 RSpec.shared_examples 'POST /' do
-  describe 'POST /accounts' do
+  describe 'POST /' do
+
+    it_should_behave_like 'a route', 'post', '/', {authenticated: false, premium: true}
+
     describe 'Nominal case' do
       before do
-        post '/accounts', {
+        post '/', {
           app_key: 'test_key',
           username: 'Babausse',
           password: 'password',
@@ -63,7 +66,7 @@ RSpec.shared_examples 'POST /' do
         let!(:default_group) { create(:default_group, rights: [right]) }
 
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -97,7 +100,7 @@ RSpec.shared_examples 'POST /' do
       
       describe 'when the language or the gender are not given' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -136,7 +139,7 @@ RSpec.shared_examples 'POST /' do
       
       describe 'when the language or the gender are not in the available list' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -176,12 +179,10 @@ RSpec.shared_examples 'POST /' do
       end
     end
 
-    it_should_behave_like 'a route', 'post', '/accounts', {authenticated: false, premium: true}
-
     describe '400 errors' do
       describe 'Username not given' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             password: 'password',
             password_confirmation: 'password',
@@ -202,7 +203,7 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Password not given' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password_confirmation: 'password',
@@ -223,7 +224,7 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Password confirmation not given' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -244,7 +245,7 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Email not given' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -266,7 +267,7 @@ RSpec.shared_examples 'POST /' do
       describe 'Username already taken' do
         before do
           create(:other_account, username: 'Babausse', email: 'another@test.com')
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -288,7 +289,7 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Username too short' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'test',
             password: 'password',
@@ -311,7 +312,7 @@ RSpec.shared_examples 'POST /' do
       describe 'Email already taken' do
         before do
           create(:other_account, username: 'Another random username', email: 'test@test.com')
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -333,7 +334,7 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Email with a bad format' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -355,7 +356,7 @@ RSpec.shared_examples 'POST /' do
 
       describe 'Password confirmation not matching' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'test_key',
             username: 'Babausse',
             password: 'password',
@@ -379,7 +380,7 @@ RSpec.shared_examples 'POST /' do
     describe '403 errors' do
       describe 'Application not premium' do
         before do
-          post '/accounts', {
+          post '/', {
             app_key: 'other_key',
             username: 'Babausse',
             password: 'password',

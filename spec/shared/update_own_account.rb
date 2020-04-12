@@ -1,11 +1,13 @@
 RSpec.shared_examples 'PUT /own' do
-  describe 'PUT /accounts/own' do
+  describe 'PUT /own' do
 
     let!(:session) { create(:session, account: account) }
 
+    it_should_behave_like 'a route', 'put', '/own', {authenticated: true}
+
     describe 'Nothing being updated' do
       before do
-        put '/accounts/own', {
+        put '/own', {
           session_id: session.token,
           app_key: 'test_key'
         }
@@ -53,7 +55,7 @@ RSpec.shared_examples 'PUT /own' do
     end
     describe 'Username being updated' do
       before do
-        put '/accounts/own', {
+        put '/own', {
           session_id: session.token,
           app_key: 'test_key',
           username: 'Compte de test'
@@ -80,7 +82,7 @@ RSpec.shared_examples 'PUT /own' do
     end
     describe 'Password being updated' do
       before do
-        put '/accounts/own', {
+        put '/own', {
           session_id: session.token,
           app_key: 'test_key',
           password: 'new_password',
@@ -108,7 +110,7 @@ RSpec.shared_examples 'PUT /own' do
     end
     describe 'Email being updated' do
       before do
-        put '/accounts/own', {
+        put '/own', {
           session_id: session.token,
           app_key: 'test_key',
           email: 'test@mail.com'
@@ -135,7 +137,7 @@ RSpec.shared_examples 'PUT /own' do
     end
     describe 'first name being updated' do
       before do
-        put '/accounts/own', {
+        put '/own', {
           session_id: session.token,
           app_key: 'test_key',
           firstname: 'Babausse'
@@ -162,7 +164,7 @@ RSpec.shared_examples 'PUT /own' do
     end
     describe 'last name being updated' do
       before do
-        put '/accounts/own', {
+        put '/own', {
           session_id: session.token,
           app_key: 'test_key',
           lastname: 'Babausse'
@@ -189,7 +191,7 @@ RSpec.shared_examples 'PUT /own' do
     end
     describe 'language being updated' do
       before do
-        put '/accounts/own', {
+        put '/own', {
           session_id: session.token,
           app_key: 'test_key',
           language: 'en_GB'
@@ -216,7 +218,7 @@ RSpec.shared_examples 'PUT /own' do
     end
     describe 'gender being updated' do
       before do
-        put '/accounts/own', {
+        put '/own', {
           session_id: session.token,
           app_key: 'test_key',
           gender: 'male'
@@ -242,12 +244,10 @@ RSpec.shared_examples 'PUT /own' do
       end
     end
 
-    it_should_behave_like 'a route', 'put', '/accounts/own', {authenticated: true}
-
     describe '400 errors' do
       describe 'session ID not given' do
         before do
-          put '/accounts/own', {
+          put '/own', {
             app_key: 'test_key'
           }
         end
@@ -265,7 +265,7 @@ RSpec.shared_examples 'PUT /own' do
 
       describe 'password confirmation not given' do
         before do
-          put '/accounts/own', {
+          put '/own', {
             app_key: 'test_key',
             session_id: session.token,
             password: 'new_password'
@@ -285,7 +285,7 @@ RSpec.shared_examples 'PUT /own' do
 
       describe 'Username too short' do
         before do
-          put '/accounts/own', {
+          put '/own', {
             session_id: session.token,
             app_key: 'test_key',
             username: 'test'
@@ -306,7 +306,7 @@ RSpec.shared_examples 'PUT /own' do
       describe 'Username already used' do
         let!(:second_account) { create(:second_account) }
         before do
-          put '/accounts/own', {
+          put '/own', {
             session_id: session.token,
             app_key: 'test_key',
             username: second_account.username
@@ -326,7 +326,7 @@ RSpec.shared_examples 'PUT /own' do
 
       describe 'Password confirmation not matching' do
         before do
-          put '/accounts/own', {
+          put '/own', {
             session_id: session.token,
             app_key: 'test_key',
             password: 'new_password',
@@ -348,7 +348,7 @@ RSpec.shared_examples 'PUT /own' do
       describe 'email already used' do
         let!(:second_account) { create(:second_account) }
         before do
-          put '/accounts/own', {
+          put '/own', {
             session_id: session.token,
             app_key: 'test_key',
             email: second_account.email

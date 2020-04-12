@@ -1,11 +1,13 @@
 RSpec.shared_examples 'GET /own' do
-  describe 'GET /accounts/own' do
+  describe 'GET /own' do
 
     let!(:session) { create(:session, account: account) }
 
+    it_should_behave_like 'a route', 'get', '/own', {authenticated: true}
+
     describe 'Nominal case' do
       before do
-        get '/accounts/own', {
+        get '/own', {
           session_id: session.token,
           app_key: 'test_key'
         }
@@ -24,12 +26,10 @@ RSpec.shared_examples 'GET /own' do
       end
     end
 
-    it_should_behave_like 'a route', 'get', '/accounts/own', {authenticated: true}
-
     describe '400 errors' do
       describe 'session ID not given' do
         before do
-          get '/accounts/own', {
+          get '/own', {
             app_key: 'test_key'
           }
         end
@@ -49,7 +49,7 @@ RSpec.shared_examples 'GET /own' do
     describe '404 errors' do
       describe 'Session ID not found' do
         before do
-          get '/accounts/own', {
+          get '/own', {
             session_id: 'unknown_token',
             app_key: 'test_key'
           }
