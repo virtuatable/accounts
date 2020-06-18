@@ -18,8 +18,5 @@ production:
   clients:
     default:
       uri: <%= ENV['MONGODB_URL'] %>
-      options:
-        connect: :replica_set
-        replica_set: virtuatable-shard-0
   options:
     raise_not_found_error: true
